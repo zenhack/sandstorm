@@ -1514,7 +1514,7 @@ public:
     context.releaseParams();
 
     return serverAddr.connect().then(
-        [this, KJ_MVCAP(httpRequest), KJ_MVCAP(clientStream), responseStream, context]
+        [KJ_MVCAP(httpRequest), KJ_MVCAP(clientStream), responseStream, context]
         (kj::Own<kj::AsyncIoStream>&& stream) mutable {
       kj::ArrayPtr<const byte> httpRequestRef = httpRequest;
       auto& streamRef = *stream;
@@ -2462,7 +2462,7 @@ public:
                                 kj::Timer& timer,
                                 bool loggedSlowStartupMessage,
                                 int numTriesSoFar) {
-    return address->connect().then([this, loggedSlowStartupMessage](auto x) -> void {
+    return address->connect().then([loggedSlowStartupMessage](auto x) -> void {
       if (loggedSlowStartupMessage) {
         KJ_LOG(WARNING, "App successfully started listening for TCP connections!");
       }
