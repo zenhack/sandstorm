@@ -1062,7 +1062,9 @@ public:
   BridgeContext(SandstormApi<BridgeObjectId>::Client apiCap, spk::BridgeConfig::Reader config)
       : apiCap(kj::mv(apiCap)), config(config),
         identitiesDir(openIdentitiesDir(config)),
-        trashDir(openTrashDir(config)), tasks(*this) {}
+        trashDir(openTrashDir(config)),
+        persistHook(kj::newPromiseAndFulfiller<PersistHook::Client>()),
+        tasks(*this) {}
 
   kj::String formatPermissions(capnp::List<bool>::Reader userPermissions) {
     auto configPermissions = config.getViewInfo().getPermissions();
@@ -1074,6 +1076,14 @@ public:
       }
     }
     return kj::strArray(permissionVec, ",");
+  }
+
+  kj::Promise<PersistHook::Client> getPersistHook() {
+    return persistHook.promise.fork().addBranch();
+  }
+
+  void setPersistHook(PersistHook::Client hook) {
+    persistHook.fulfiller->fulfill(kj::mv(hook));
   }
 
   capnp::List<spk::BridgeConfig::PowerboxApi>::Reader getPowerboxApis() {
@@ -1172,11 +1182,14 @@ public:
   std::map<kj::StringPtr, SessionContext::Client&> sessions;
   // TODO(cleanup): Make this private with appropriate accessor methods.
 
+
 private:
   SandstormApi<BridgeObjectId>::Client apiCap;
   spk::BridgeConfig::Reader config;
   kj::AutoCloseFd identitiesDir;
   kj::AutoCloseFd trashDir;
+
+  kj::PromiseFulfillerPair<PersistHook::Client> persistHook;
 
   struct IdentityRecord {
     IdentityRecord(const IdentityRecord& other) = delete;
@@ -2182,6 +2195,12 @@ public:
     return kj::READY_NOW;
   }
 
+  kj::Promise<void> setPersistHook(SetPersistHookContext context) override {
+    auto hook = context.getParams().getHook();
+    bridgeContext.setPersistHook(hook);
+    return kj::READY_NOW;
+  }
+
   kj::Promise<void> getSavedIdentity(GetSavedIdentityContext context) override {
     context.getResults().setIdentity(
         bridgeContext.loadIdentity(context.getParams().getIdentityId()));
@@ -2322,7 +2341,14 @@ public:
     auto objectId = context.getParams().getObjectId();
 
     if (objectId.isApplication()) {
-      KJ_UNIMPLEMENTED("application-defined object IDs not implemented");
+      return bridgeContext.getPersistHook().then([objectId](PersistHook::Client hook) {
+        auto req = hook.restoreRequest();
+        req.getObjectId().set(objectId.getApplication());
+        return req.send().getCap();
+      }).then([&context](capnp::Capability::Client cap) {
+        context.getResults().setCap(cap);
+        return kj::Promise<void>(kj::READY_NOW);
+      });
     }
 
     KJ_REQUIRE(objectId.isHttpApi(), "unrecognized object ID type");
