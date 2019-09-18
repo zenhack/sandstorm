@@ -1,0 +1,1787 @@
+{
+  "error": "Ошибка: %s",
+  "shell": {
+    "layout": {
+      "demoExpired": {
+        "title": "Демо истек",
+        "canUpgrade": "Спасибо за попытку демо Sandstorm!  Срок действия вашей учётной записи демо истека.  Если вы хотите продолжить использовать Sandstorm  и сделать свою учетную запись постоянной, войдите в систему.",
+        "cannotUpgrade": "Спасибо за попытку демо Sandstorm!  Ваш аккаунт демо истек.",
+        "signOut": "Выйти"
+      },
+      "adminAlert": {
+        "icon": "!",
+        "title": "*Уведомление от администратора"
+      },
+      "demoModal": {
+        "header": "Sandstorm—устанавливаемый прогаммный пакет веб-производительности.",
+        "withAppDemo": "с такими приложениями, как %s.",
+        "withoutAppDemo": "со всеми приложениями, которые вам нужны в одном месте.",
+        "startButton": {
+          "withAppDemo": "Попробуйте %s »",
+          "withoutAppDemo": "Пуск »"
+        },
+        "explanation": "<p>Sandstorm позволяет легко запускать приложения на вашем собственном сервере.  В дополнение к улучшению конфиденциальности и контроля, <a href=\"https://blog.sandstorm.io/news/2014-07-21-open-source-web-apps-require-federated-hosting.html\" target=\"_blank\">это приносит приложения с открытым исходным кодом для более широкой аудитории.</a></p>",
+        "securityOverview": "<p>Sandstorm также смехотворно безопасен. Если вас интересует безопасность, ознакомьтесь с <a href=\"https://docs.sandstorm.io/en/latest/developing/security-practices/\" target=\"_blank\">обзором модели безопасности Sandstorm</a>.</p>"
+      }
+    },
+    "notifications": {
+      "hint": "Уведомления",
+      "text": "Уведомления"
+    },
+    "notificationsPopup": {
+      "title": "Уведомления",
+      "empty": "Нет уведомлений…"
+    },
+    "loading": {
+      "title": "Загрузка…",
+      "text": "Загрузка…"
+    },
+    "notFound": {
+      "title": "Не найдено",
+      "text": "404 Не найдено :("
+    },
+    "root": {
+      "title": "Главная"
+    },
+    "grainLogContents": {
+      "prefix": "…"
+    },
+    "grainLog": {
+      "title": "Журнал отладки: %s"
+    },
+    "signup": {
+      "title": "Претензия приглашение",
+      "signedUp": {
+        "keyIsUsedWithOrigin": "Вы успешно зарегистрировались!  Теперь <a href=\"https://apps.sandstorm.io/?host=%s\">устанобите некоторые приложения</a>.",
+        "keyIsNotUsed": "Похоже, у вас есть уже учётная запись, поэтому вам не нужен этот ключ регистрации."
+      },
+      "keyIsUsed": "Извините.  Этот ключ регистрации уже использовался.",
+      "processing": "Подождите пожалуйста‥",
+      "signInGuide": "Сначала вы должны войти в систему.  Нажмите кнопку «Войти» в правом верхнем углу.",
+      "invalidKey": "Извините.  Это не действительный ключ регистрации."
+    },
+    "uploadStatus": {
+      "title": "Загрузка…",
+      "uploadFailedWithError": "Ошибка загрузки: %s %s",
+      "statusWithProgress": "%s… %s",
+      "status": "%s…",
+      "uploadFailed": "Не удалось загрузить.  Пожалуйста, попробуйте ещё раз."
+    },
+    "uploadTest": {
+      "title": "Пробная страница для загрузки",
+      "explanation": "Эта страница предназначена для использования тестовыми сценариями.",
+      "uploadApp": "Загрузка приложения:",
+      "uploadBackup": "Загрузка резервной копии:"
+    },
+    "referrals": {
+      "title": "Программа направления",
+      "header": {
+        "isPaid": {
+          "title": "Получить до <span class=\"reward-amount\">30 ГБ</span> хранения данных, когда ваши друзья делятся на Oasis!",
+          "explanation": "За каждого друга, который создаёт ссылку для обмена, мы вознаградим вас 2 ГБ."
+        },
+        "isNotPaid": {
+          "title": "Полутите неограниченное количество песчинок и до <span class=\"reward-amount\">2 ГБ</span> хранения данных, когда ваши друзья делятся на Oasis!",
+          "explanation": "За каждого друга, который создаёт ссылку для обмена, мы вознаградим вас 50 МБ.  Вы также получите неограниченное количество песчинок."
+        }
+      },
+      "howTo": {
+        "title": "Разделение—направление",
+        "explanation": "Чтобы начать, откройте лубую песчинку и нажмите «Поделиться доступом».",
+        "getStart": {
+          "step1": "Вы поделитесь песчинкой с вашим другом (который ещё не использует Oasis).",
+          "step2": "Ваш друг входит в систему.",
+          "step3": "Ваш друг делится песчинкой с лубым человеком (включая вас)."
+        }
+      },
+      "status": {
+        "title": "*_Your referrals & status",
+        "explanation": "*_Once you send a sharing link out, people will appear in this list after they sign in.",
+        "pending": {
+          "title": "*_Still needs to share",
+          "explanation": "*_Tell these people to make a grain and share it with you. You must actually view the grain they shared with you!"
+        },
+        "success": {
+          "title": "*_Successful referrals",
+          "explanation": "*_You've successfully referred these people. Congratulations!"
+        }
+      },
+      "finePrint": {
+        "title": "*_The fine print",
+        "warningWithAccountLink": "*_Your referral bonus lasts until 1 year after the referral. The terms of this referral program may change without warning; however, such changes will not affect bonuses you have already received. If you need even more space, <a href=\"%s\">upgrade your account.</a>",
+        "explanation": "*_Paid subscribers can get up to 30 GB of free storage, 2 GB per person they refer, in addition to the storage from their account level. Free account holders are not eligible for a referral bonus."
+      }
+    },
+    "about": {
+      "title": "О Sandstorm",
+      "intro": {
+        "explanation": "*_<a href=\"https://sandstorm.io\">Sandstorm.io</a> is an open source hosting platform for personal/private instances of web apps. Users can upload and install arbitrary software through a simple app-store-like web interface. In addition to better privacy, <a href=\"https://blog.sandstorm.io/news/2014-07-21-open-source-web-apps-require-federated-hosting.html\">this is the only way to make Open Source web apps viable.</a>",
+        "version": "*_Version: %s",
+        "unofficialWarning": "*_<strong>WARNING:</strong> This server is running an unofficial build of Sandstorm which may contain modifications not reviewed by the developers."
+      },
+      "changelog": {
+        "title": "Недавние изменения"
+      },
+      "developers": {
+        "title": "Основные разработчики"
+      },
+      "advisors": {
+        "title": "Советники"
+      },
+      "corporate": {
+        "title": "Корпоративные спонсоры",
+        "explanation": "*_These companies contributed heavily to Sandstorm's <a href=\"http://igg.me/at/sandstorm\">crowdfunding campaign</a>."
+      },
+      "individual": {
+        "title": "*_Key indivisual sponsors",
+        "explanation": "*_These individuals contributed heavily to Sandstorm's <a href=\"http://igg.me/at/sandstorm\">crowdfunding campaign</a>."
+      },
+      "backers": {
+        "title": "Спонсоры",
+        "explanation": "из <a href=\"http://igg.me/at/sandstorm\">нашей компании Indiegogo &gt;</a>",
+        "anonymous": "и %s анонимных участников",
+        "loading": "загрузка…"
+      },
+      "dependencies": {
+        "title": "*_Third-party works used",
+        "license": "*_license",
+        "explanation": "*_These works are copyright the respective authors and used under the terms of the respective licenses."
+      },
+      "copyright": {
+        "title": "Авторское право",
+        "license": "*_The Sandstorm implementation is copyright by Sandstorm Development Group, Inc. and contributors. The implementation is licensed under the Apache License 2.0.",
+        "trademark": "*_\"Sandstorm\" and the Sandstorm logo are trademarks of Sandstorm Development Group, Inc., and may not be used to advertise derivative works nor commercial services without written consent from Sandstorm Development Group, Inc."
+      },
+      "terms": {
+        "license": "Лицензия",
+        "terms": "*_Terms of service",
+        "privacy": "*_Privacy policy"
+      }
+    }
+  },
+  "grains": {
+    "title": "Песчинки",
+    "grainView": {
+      "notFoundWithId": "Песчинка не найдена с идентификатором %s.",
+      "quotaExhausted": "*_Cannot start grain because owner's quota is exhausted. If this is your grain, please upgrade your subscription plan to continue.",
+      "openWithWhichIdentity": "Вы бы предпочли раскрыть свою личность в этой песчинке или остаться анонимным?",
+      "openInIncognitoMode": "Открыть в режиме инкогнито",
+      "revealMyIdentity": "Раскрыть мою личность"
+    },
+    "grainInMyTrash": {
+      "explanation": "*_This grain is in your trash. You cannot access it unless you restore it to your main list.",
+      "restore": "*_Restore to main list"
+    },
+    "grainInOwnersTrash": {
+      "explanation": "*_You can no longer access this grain because its owner has moved it to the trash."
+    },
+    "grainOwnerSuspended": {
+      "explanation": "*_You can no longer access this grain because its owner's account has been suspended."
+    },
+    "wrongIdentity": {
+      "explanation": "*_This link was intended for the user:"
+    },
+    "requestAccess": {
+      "permissionDenied": "*_You do not have permission to access this grain.",
+      "requestAccessHint": "*_Request access",
+      "requestAccess": "*_Request Access",
+      "warnIdentityRevealing": "*_Requesting access will reveal your identity to the grain owner.",
+      "sendRequest": "*_Sending your request...",
+      "waitForApproving": "*_Your request has been sent. You will receive an email if your request is approved.",
+      "requestFailed": "*_Your request failed because: %s",
+      "signInPlease": "*_Please sign in to request access."
+    },
+    "invalidToken": {
+      "invalidToken": "*_Invalid token: %s"
+    },
+    "revokedShareLink": {
+      "linkRevoked": "*_Sorry, this link has been revoked."
+    },
+    "grainTitle": {
+      "was": "*_was: %s",
+      "renamedFrom": "*_renamed from: %s"
+    },
+    "grainDeleteButton": {
+      "hint": "*_Move to trash",
+      "text": "*_Move to trash"
+    },
+    "grainDebugLogButton": {
+      "hint": "*_Show Debug Log",
+      "text": "*_Log"
+    },
+    "grainBackupButton": {
+      "hint": "Скачать резервную копию",
+      "text": "*_Backup"
+    },
+    "grainBackupPopup": {
+      "title": "Скачать резервную копию",
+      "warning": "*_Warning! Restoring this backup might not work how you expect it to.",
+      "processing": "*_Preparing backup...",
+      "cancelHint": "отменить",
+      "cancel": "Отменить",
+      "confirmHint": "*_download backup",
+      "confirm": "Скачать резервную копию"
+    },
+    "grainRestartButton": {
+      "hint": "Перезапустить приложение",
+      "text": "*_Restart"
+    },
+    "grainApiTokenButton": {
+      "hint": "*_Get webkey",
+      "text": "*_Get&nbsp;Webkey"
+    },
+    "grainApiTokenPopup": {
+      "title": "*_Webkeys",
+      "processing": "*_Generating...",
+      "cancel": "Отменить",
+      "copyForExternalApp": "*_Copy this webkey and give it to the external app:",
+      "back": "*_Go back",
+      "description": "*_A webkey allows you to connect an external app (e.g. a mobile app) to this app.",
+      "labelTitle": "*_Label:",
+      "labelPlaceholder": "*_e.g. 'Android app'",
+      "roleTitle": "*_Role:",
+      "permissionTitle": "*_all access",
+      "create": "*_Create",
+      "webkeyListTitle": "*_Your existing webkeys:",
+      "revokeHint": "*_Revoke",
+      "revoke": "*_Revoke"
+    },
+    "grainShareButton": {
+      "hint": "Поделиться доступом к этой песчинке",
+      "text": "Поделиться доступом"
+    },
+    "whoHasAccessPopup": {
+      "title": "*_Who has access",
+      "noLoggedInUsers": "*_No logged-in users have visited your links yet.",
+      "nobody": "*_You have granted access to nobody.",
+      "addedBy": "*_added by",
+      "revokeHint": "*_Revoke",
+      "revoke": "*_Revoke",
+      "hasCustomPermissions": "*_[has custom permissions]"
+    },
+    "selectRole": {
+      "hint": "*_select a role"
+    },
+    "emailInviteTab": {
+      "demoModeAlert": "*_Sharing emails cannot be sent while in demo mode. Create an account to send sharing emails, or get a shareable link instead.",
+      "personalMessagePlaceholder": "*_Type a personal message (optional)...",
+      "send": "*_Send",
+      "sending": "*_Sending...",
+      "success": "*_Successfully sent.",
+      "reset": "*_+ Send more invites",
+      "startOver": "*_<< Start over"
+    },
+    "shareableLinkTab": {
+      "withRoles": "*_Anyone with this link:",
+      "withoutRoles": "*_Anyone with this link can access the grain.",
+      "labelPlaceholder": "*_Label (optional)",
+      "labelExplanation": "*_Use a label to remind yourself to whom you sent this unique link.",
+      "create": "*_Create",
+      "creating": "*_Generating...",
+      "success": "*_Copy this link:",
+      "reset": "*_+ Create another link",
+      "cancel": "Отменить"
+    },
+    "shareWithOthers": {
+      "title": "*_Share with others",
+      "sendInviteTab": "*_Send an invite",
+      "shareableLinkTab": "*_Get shareable link",
+      "whoHasAccess": "*_See who has access"
+    },
+    "grainSharePopup": {
+      "oldSharingModelDescription": "*_This grain uses the old sharing model. You can share it by copy/pasting the URL from the location bar",
+      "upgradeDescription": "*_You can upgrade this grain to the new model, but anyone with whom you shared this grain previously will lose access; you will have to share with them again.",
+      "upgradeWarning": "*_Upgrading cannot be undone.",
+      "upgrade": "*_upgrade",
+      "openInIncognitoMode": "*_You are viewing this grain anonymously.",
+      "toShareAccess": "*_To share access, copy this link:",
+      "openNonAnonymouslyHead": "*_For more sharing options, you must",
+      "openNonAnonymouslyLink": "*_open this grain non-anonymously",
+      "openNonAnonymouslyTail": "*_.",
+      "signIn": "*_For more sharing options, please sign in."
+    },
+    "grainPowerboxRequest": {
+      "powerboxRequestHint": "*_Powerbox request",
+      "powerboxRequest": "*_P"
+    },
+    "grainPowerboxOffer": {
+      "powerboxOfferHint": "*_Powerbox offer",
+      "powerboxOffer": "*_P"
+    },
+    "grainPowerboxOfferPopup": {
+      "title": "*_Powerbox Offer",
+      "dismiss": "*_Dismiss"
+    },
+    "share": {
+      "grainNotFoundWithId": "*_No grain found with ID %s. Maybe you need to sign in to a different account?",
+      "signIn": "*_You must be signed in to grant access to a grain."
+    },
+    "grainlist": {
+      "sandstormGrainListPage": {
+        "introButton": {
+          "hint": "*_What is a grain?"
+        },
+        "mainListButton": "*_View main list",
+        "trashButton": "*_View trash (%s)",
+        "restoreButton": "*_Restore backup...",
+        "search": {
+          "placeholder": "*_search"
+        },
+        "usageInfo": {
+          "quota": "*___count__ of __quota__ grains",
+          "size": "*___size__ of __total__ used"
+        },
+        "trash": {
+          "emptyButton": "*_Empty all trash",
+          "explanation": "*_(Grains will be permanently removed after 30 days in the trash. To keep a grain, restore it to the Main list.)"
+        },
+        "noGrains": {
+          "notFound": "*_<strong>No matching grains found.</strong>",
+          "inTrash": "*_Some grains in your trash match your search.",
+          "trashButton": "*_View trash",
+          "empty": "*_<strong>Trash is empty.</strong>",
+          "explanation": "*_You don't have any grains yet.",
+          "hasApps": "*_Select an app and create your first grain.",
+          "hasNoApp": "*_Install an app to create your first grain."
+        },
+        "moveToTrash": "*_Move to trash"
+      },
+      "sandstormGrainTable": {
+        "bulkAction": {
+          "disabledHint": "*_To perform bulk actions, you must first select some grains in the list."
+        },
+        "tableHeader": {
+          "title": "*_Name",
+          "size": "*_Size",
+          "lastUsed": "*_Last activity",
+          "ownership": "*_Mine/Shared",
+          "collaborators": "*_Collaborators"
+        },
+        "tableBody": {
+          "was": "*_(was: %s)",
+          "renamedFrom": "*_(renamed from: %s)",
+          "new": "*_Unopened",
+          "mine": "*_My grain",
+          "shared": "*_Shared with me"
+        }
+      },
+      "contactAutocomplete": {
+        "contactInputBox": {
+          "placeholder": "*_Enter email addresses or names"
+        }
+      }
+    }
+  },
+  "notifications": {
+    "appUpdateNotificationItem": {
+      "title": "*_App updates are available:",
+      "appUpdates": "*_<strong>__name__</strong>: version __version__ is available",
+      "submitButton": {
+        "hint": "*_Update all of the above apps",
+        "text": "*_Apply updates"
+      },
+      "dismissButton": {
+        "hint": "*_Ignore the above updates",
+        "text": "*_Dismiss"
+      }
+    },
+    "mailingListBonusNotificationItem": {
+      "explanationWithBonus": "*_Subscribe to our announcement list and get <strong>%s bonus storage</strong> (1-2 emails per month).",
+      "submitButton": "*_Subscribe",
+      "dismissButton": "*_No thanks"
+    },
+    "referralNotificationItem": {
+      "paidUser": "*_Get up to 30 GB bonus with the",
+      "unpaidUser": "*_Unlimited grains & up to 2 GB bonus with the",
+      "link": "*_referral program »",
+      "dismissButton": "*_Dismiss"
+    },
+    "adminNotificationItem": {
+      "explanation": "*_You can help Sandstorm by sending us some anonymous usage stats. Click here for more info."
+    },
+    "backgroundedGrainNotificationItem": {
+      "title": "*_<strong>__grain__</strong> is backgrounded:",
+      "cancelButton": {
+        "hint": "*_Stop the background app",
+        "text": "Отменить"
+      }
+    },
+    "identityChangesNotificationItem": {
+      "explanation": "*_We're changing the way identities work in Sandstorm. Your account may be affected. Click here to learn more."
+    },
+    "grainActivityNotificationItem": {
+      "title": "*_<strong>__sender__</strong> in <strong>__grain__</strong>:",
+      "dismissButton": {
+        "hint": "*_Dismiss this notification",
+        "text": "*_Dismiss"
+      }
+    }
+  },
+  "powerboxBuiltins": {
+    "uiViewPowerboxConfiguration": {
+      "explanation": "*_with permissions:",
+      "fullAccess": "*_Full access",
+      "connectButton": "*_Connect",
+      "chooseHostedObjectButton": "*_Browse grain contents »"
+    },
+    "ipNetworkPowerboxCard": {
+      "explanation": "*_Admin: grant all outgoing network access",
+      "encryptedWith": "*_(encrypted with %s)"
+    },
+    "ipInterfacePowerboxCard": {
+      "explanation": "*_Admin: grant all incoming network access"
+    },
+    "emailVerifierPowerboxCard": {
+      "verifyWith": "*_Verify e-mail addresses using %s",
+      "verifyWithAnyService": "*_Verify e-mail addresses using any login service"
+    },
+    "identityPowerboxConfiguration": {
+      "explanation": "*_with permissions:",
+      "fullAccess": "*_Full access",
+      "connectButton": "*_Connect"
+    },
+    "addNewVerifiedEmailPowerboxCard": {
+      "explanation": "*_Add a new address"
+    },
+    "httpUrlPowerboxCard": {
+      "useUrl": "*_Use %s"
+    },
+    "httpArbitraryPowerboxCard": {
+      "explanation": "*_Specify URL..."
+    },
+    "httpArbitraryPowerboxConfiguration": {
+      "explanation": "*_Enter URL:",
+      "placeholder": "*_https://example.com",
+      "connectButton": "*_Connect"
+    },
+    "httpOAuthPowerboxCard": {
+      "useService": "*_Use %s"
+    },
+    "httpOAuthPowerboxConfiguration": {
+      "requstPermissionsFromService": "*_Requesting permissions from %s (see popup)."
+    }
+  },
+  "styleguide": {
+    "title": "*_Sandstorm style guide",
+    "note": "*_(note: this is a work in progress.)",
+    "copyRules": {
+      "title": "*_Copy rules",
+      "rule1": "*_Be terse but clear.  Avoid technical terms where less-technical ones will do.",
+      "rule2": "*_Capitalize the first letter of the first word of a section heading or button.  Do not capitalize the second word, or anything else, unless referring to a proper noun like Google or GitHub.",
+      "rule3": "*_Use verbs for text on buttons. The button text should describe what clicking that button will do.",
+      "rule4": "*_Use nouns for text which is a link.  The link text should indicate what the link will take you to.",
+      "rule5": "*_Use nouns for basically everything else, too, to communicate the information architecture. Section headings should be nouns which describe the content of the section.  Labels should be nouns which describe the content of the field."
+    },
+    "styleRules": {
+      "title": "*_Style rules",
+      "rule1": "*_Stick to a limited color palette.  (TODO: add specific colors)",
+      "rule2": "*_Use typefaces no smaller than 13px for text content.  Readability is important and not everyone has young eyes.",
+      "rule3": "*_Make click targets no smaller than 32px square or 26px tall if appreciably wider.  Remember that due to Fitts' Law, larger click targets are easier to interact with."
+    },
+    "forms": {
+      "title": "*_Forms",
+      "rule1": "*_Use the <code>standard-form</code> class where appropriate.",
+      "rule2": "*_The primary action button of a form should be at the bottom right of the form. Secondary buttons should line up to the left of that primary action button.",
+      "rule3": "*_When providing text input fields, place labels above the input, not side-by-side or inside the field as placeholder text.  Place additional explanation or instructions below the input. Placeholder text should be used for examples, not instructions.",
+      "rule4": "*_Forms are generally used for transactional interactions, where the user cares about the success or failure of the application.  Avoid optimistic UI in favor of multi-state UI which communicates network activity, success, and failure.  A common pattern is:",
+      "rule4-1": "*_Have the default state of the form.  Disable a save button until the user makes a change.",
+      "rule4-2": "*_When the user clicks an action button, start the RPC, and disable the entire form to indicate that the action is underway.",
+      "rule4-3": "*_When the RPC completes, if the RPC failed, show an error message at the top of the context over which the action applies.  If the RPC succeeded, either indicate a success message (again, at the top of the context over which the action applies) or if this was a modal interaction and the completion of the RPC indicates successful completion of the workflow, dismiss the form with no additional message."
+    },
+    "example": {
+      "title": "*_An example:",
+      "label": "*_Email",
+      "placeholder": "*_alice@example.com",
+      "subtext": "*_You might want to receive notifications.",
+      "submitButton": "Сохранить",
+      "discardButton": "*_Discard"
+    }
+  },
+  "admin": {
+    "title": "*_Admin",
+    "admin": {
+      "newAdmin": {
+        "title": "*_Admin panel",
+        "wildcardHostBroken": "*_WARNING: This server seems to have its WILDCARD_HOST misconfigured.  Until you fix it, you will not be able to use any apps. You can read <a target=\"_blank\" href=\"https://docs.sandstorm.io/en/latest/administering/faq/#why-do-i-see-an-error-when-i-try-to-launch-an-app-even-when-the-sandstorm-interface-works-fine\"> more info in the Sandstorm docs</a> and in your browser's Javascript console. You'll need to adjust DNS, SSL/TLS certificates, or edit the sandstorm.conf file. If you see no information in the JS console, or wish to test if you have fixed the problem, reload this page to re-run the test. If you're still having problems, <a href=\"https://github.com/sandstorm-io/sandstorm/issues\">please file an issue.</a>",
+        "websocketBroken": "*_WARNING: This server seems to be unable to create a WebSocket. Sandstorm may appear to run fine, but many apps will fail to run properly. <a target=\"_blank\" href=\"https://docs.sandstorm.io/en/latest/administering/faq/#how-do-i-enable-websockets-proxying-or-why-do-some-apps-seem-to-crash-reload\"> Learn more.</a>  Usually this is caused by a reverse proxy like nginx or Apache that needs to be reconfigured. If you think you are seeing this message in error, please reload this page or <a href=\"https://github.com/sandstorm-io/sandstorm/issues\">file an issue.</a>",
+        "hasSetupToken": "*_You are not logged in as an admin, but you do have a setup token. You can either <a href=\"/setup\">visit the setup wizard</a> or <a href=\"/admin/status\">view the system log</a>.",
+        "hasNoSetupToken": "*_You are not logged in as an admin. To access the admin panel, log in as an admin user or generate a token from the command line by running `sandstorm admin-token`."
+      },
+      "newAdminRoot": {
+        "configuration": {
+          "title": "Настройки"
+        },
+        "management": {
+          "title": "Управление"
+        }
+      }
+    },
+    "identityProviders": {
+      "name": "Провайдеры входа",
+      "providers": {
+        "emailPassLess": "Электронная почта (без пароля)"
+      },
+      "subtext": "Как пользователи входят.",
+      "newAdminIdentity": {
+        "explanation": "*_Choose which services users may use to identify themselves.  Anyone can log in, but only users you invite will be able to install apps or create grains.",
+        "organizationLinkPrefix": "*_To configure organization membership and settings, see",
+        "organizationLink": "*_organization settings",
+        "organizationLinkPostfix": "*_."
+      },
+      "adminIdentityProviderConfigureEmail": {
+        "title": "Настройки входа по электронной почте",
+        "error": "*_Failed to save changes: %s",
+        "warning": "*_Note: to use email login, you'll need to configure email delivery after this.",
+        "explanation": "Вход по электронной почте не имеет дополнительных параметров конфигурации.",
+        "saveButton": "Сохранить",
+        "enableButton": "Включить",
+        "cancelButton": "Отменить",
+        "disableButton": "Выключить"
+      },
+      "googleLoginSetupInstructions": {
+        "explanation": "*_First, you'll need to get a Google Client ID. Follow these steps:",
+        "step1": "*_Visit <a href=\"https://console.developers.google.com/\" target=\"blank\">https://console.developers.google.com/</a>",
+        "step2": "*_\"Create Project\", if needed. Wait for Google to finish provisioning.",
+        "step3": "*_On the left sidebar, go to \"Credentials\" and, on the right, \"OAuth consent screen\". Make sure to enter an email address and a product name, and save.",
+        "step4": "*_On the left sidebar, go to \"Credentials\".  Click the \"Create credentials\" button, then select \"OAuth client ID\" as the type.",
+        "step5": "*_Select \"Web application\" as your application type.",
+        "step6": "*_Set Authorized Javascript Origins to: <span class=\"idp-config-url\">%s</span>",
+        "step7": "*_Set Authorized Redirect URI to: <span class=\"idp-config-url\">%s/_oauth/google</span>",
+        "step8": "*_Finish by clicking \"Create\"."
+      },
+      "adminIdentityProviderConfigureGoogle": {
+        "title": "*_Google login configuration",
+        "formerBaseUrlWarning": "*_This server moved from <code>__former__</code> to <code>__current__</code>. You'll need to visit <a target=\"_blank\" href=\"https://console.developers.google.com/\">https://console.developers.google.com/</a> and update the \"Authorized Javascript Origins\" and \"Authorized Redirect URI\" for this Client ID to include the values below.",
+        "error": "*_Failed to save changes: %s",
+        "explanation": "*_Then, copy over your Client ID and Client secret below:",
+        "clientId": "*_Client ID:",
+        "clientSecret": "*_Client secret:",
+        "saveButton": "Сохранить",
+        "enableButton": "*_Enable",
+        "cancelButton": "Отменить",
+        "disableButton": "*_Disable"
+      },
+      "githubLoginSetupInstructions": {
+        "explanation": "*_First, you'll need to get a Github Client ID and Client secret. Follow these steps:",
+        "step1": "*_Visit <a href=\"https://github.com/settings/applications/new\" target=\"blank\">https://github.com/settings/applications/new</a>",
+        "step2": "*_Set Homepage URL to: <span class=\"idp-config-url\">%s</span>",
+        "step3": "*_Set Authorization callback URL to: <span class=\"idp-config-url\">%s_oauth/github</span>"
+      },
+      "adminIdentityProviderConfigureGitHub": {
+        "title": "*_GitHub login configuration",
+        "formerBaseUrlWarning": "*_This server moved from <code>__former__</code> to <code>__current__</code>. You'll need to visit <a target=\"_blank\" href=\"https://github.com/settings/developers\">https://github.com/settings/developers</a> and update the Homepage URL and Authorization callback URL for this application to the values below.",
+        "explanation": "*_Then, copy over your Client ID and Client secret below:",
+        "clientId": "*_Client ID:",
+        "clientSecret": "*_Client secret:",
+        "saveButton": "Сохранить",
+        "enableButton": "*_Enable",
+        "cancelButton": "Отменить",
+        "disableButton": "*_Disable"
+      },
+      "adminIdentityProviderConfigureLdap": {
+        "title": "*_LDAP login configuration",
+        "error": "*_Failed to save changes: %s",
+        "url": {
+          "label": "*_LDAP server URL:",
+          "subtext": "*_e.g. <code>ldap://ldap.example.com:389</code>.  Use port 636 for SSL."
+        },
+        "searchBindDn": {
+          "label": "*_Bind user DN",
+          "subtext": "*_The DN to bind as when searching for a user in the tree, e.g. <code>cn=admin,ou=users,dc=example,dc=com</code>.  Optional, but needed if your server doesn't allow unauthenticated searches."
+        },
+        "searchBindPassword": {
+          "label": "*_Bind user password",
+          "subtext": "*_Optional, needed if specifying bind DN above."
+        },
+        "base": {
+          "label": "*_Base DN",
+          "subtext": "*_The root object under which to search for user account nodes, e.g. <code>ou=users,dc=example,dc=com</code>"
+        },
+        "searchUsername": {
+          "label": "*_LDAP username attribute",
+          "subtext": "*_The LDAP attribute on a user object which represents the user's username (what they will enter in the username field when signing in)."
+        },
+        "nameField": {
+          "label": "*_LDAP given name attribute",
+          "subtext": "*_The LDAP attribute on a user object which represents the user's full display name."
+        },
+        "emailField": {
+          "label": "*_LDAP email attribute",
+          "subtext": "*_The LDAP attribute on a user object which represents the user's email address."
+        },
+        "filter": {
+          "label": "*_Additional LDAP filter criteria",
+          "subtext": "*_An optional LDAP query fragment that will be included in the user search. This is not commonly used. See <a target=\"_blank\" href=\"http://www.ietf.org/rfc/rfc2254.txt\">RFC2254</a>."
+        },
+        "caCert": {
+          "label": "*_LDAP CA certificate",
+          "placeholder": "*_-----BEGIN CERTIFICATE-----\nMIID...\n-----END CERTIFICATE-----",
+          "subtext": "*_This is only necessary if your server supports SSL and is using a private CA not in the common trusted set. Note that it does NOT work to enter the LDAP server's own certificate here -- it must be the certificate of a CA which has signed the LDAP server's certificate."
+        },
+        "saveButton": "Сохранить",
+        "enableButton": "*_Enable",
+        "cancelButton": "Отменить",
+        "disableButton": "*_Disable"
+      },
+      "adminIdentityProviderConfigureSaml": {
+        "title": "*_SAML login configuration",
+        "explanation": "*_Your SAML IDP should be configured to return a persistent nameID. In addition, if you are not using Active Directory, you <strong>must</strong> configure your IDP to provide two extra attributes, <code>email</code> and <code>displayName</code>.",
+        "serviceUrl": "*_The Service URL of this server is: <code>%s</code>",
+        "logoutUrl": "*_The Service Logout URL of this server is: <code>%s</code>",
+        "metadataUrlAt": "*_If your SAML IDP supports reading the service provider metadata from a URL, then you can point it at: <code><a href=\"__href__\" target=\"_blank\">__text__</a></code>",
+        "error": "*_Failed to save changes: %s",
+        "entryPoint": {
+          "label": "*_SAML provider entry point URL:",
+          "placeholder": "*_https://YOUR_SAML_PROVIDER.com/sso/saml"
+        },
+        "logout": {
+          "label": "*_SAML provider logout URL (optional):",
+          "placeholder": "*_https://YOUR_SAML_PROVIDER.com/sso/saml/SingleLogoutService"
+        },
+        "publicCert": {
+          "label": "*_SAML cert for above provider:",
+          "placeholder": "*_base64 encoded cert (e.g. MIID...8F==)"
+        },
+        "entityId": {
+          "label": "*_Entity ID:"
+        },
+        "saveButton": "Сохранить",
+        "enableButton": "*_Enable",
+        "cancelButton": "Отменить",
+        "disableButton": "*_Disable"
+      },
+      "adminIdentityProviderTable": {
+        "title": "*_Login provider",
+        "status": "*_Status"
+      },
+      "adminIdentityRow": {
+        "enabled": "*_Enabled",
+        "disabled": "*_Not enabled",
+        "baseUrlChanged": {
+          "explanation": "*_Disabled due to BASE_URL change",
+          "reconfigureButton": "*_reconfigure"
+        },
+        "configureButton": {
+          "hint": "*_Configure %s login",
+          "text": "*_Configure"
+        }
+      }
+    },
+    "organization": {
+      "name": "*_Organization settings",
+      "subtext": "*_Smoother onboarding and collaboration for larger teams.",
+      "organizationSettingsBlurb": {
+        "explanation": "*_Sandstorm allows you to define an organization. You can automatically apply some settings to all members of your organization. Users within the organization will automatically be able to log in, install apps, and create grains."
+      },
+      "newAdminOrganization": {
+        "success": "Изменения сохраняются.",
+        "error": "*_Failed to save changes: %s",
+        "membership": {
+          "title": "*_Organization membership",
+          "emailToggle": {
+            "label": "*_Users authenticated via email address",
+            "subtext": "*_Note: disabled because email login is not configured."
+          },
+          "emailDomain": {
+            "label": "*_Domain:",
+            "subtext": "*_Users with an email address at this domain will be members of this server's organization."
+          },
+          "gappsToggle": {
+            "label": "*_Users authenticated via Google Apps for Work",
+            "subtext": "*_Note: disabled because Google login is not configured."
+          },
+          "gappsDomain": {
+            "label": "*_Domain:",
+            "subtext": "*_Users with a Google Apps for Work account under this domain will be members of this server's organization."
+          },
+          "ldapToggle": {
+            "label": "*_Users authenticated via LDAP",
+            "subtext": "*_Note: disabled because LDAP login is not configured."
+          },
+          "samlToggle": {
+            "label": "*_Users authenticated via SAML",
+            "subtext": "*_Note: disabled because SAML login is not configured."
+          }
+        },
+        "settings": {
+          "title": "*_Organization settings",
+          "disallowGuests": {
+            "label": "*_Disallow collaboration with users outside the organization.",
+            "subtext": "*_Users will be required to log in as a member of your organization to view sharing links. Guest access will be disabled."
+          },
+          "shareContacts": {
+            "label": "*_Make all organization users visible to each other",
+            "subtext": "*_This setting automatically adds users within the organization to each other's contact list so that they can share grains with each other.  Disable this if you have some users whose identity should stay hidden from other users."
+          }
+        },
+        "saveButton": "Сохранить"
+      }
+    },
+    "emailConfig": {
+      "name": "*_Email configuration",
+      "subtext": "*_How email gets sent to users.",
+      "newAdminEmailConfig": {
+        "outbound": {
+          "title": "*_Outbound email",
+          "warning": "*_<strong>Email is unconfigured.</strong> Email-related features like email login, notifications, sharing invitations, and requesting access will be unavailable until you configure email."
+        },
+        "howItWorks": {
+          "title": "*_How Sandstorm uses email",
+          "explanation": "*_Sandstorm sends email notifications, and Sandstorm apps can send email notifications, too. Every app receives a unique email address, so Sandstorm needs to send email from a variety of \"From:\" addresses. Therefore, Gmail SMTP won't work, but there are other free services. See <a href=\"https://docs.sandstorm.io/en/latest/administering/email/#outgoing-smtp\">more info in the docs</a>."
+        },
+        "success": "Изменения сохраняются.",
+        "error": "Не удалось сохранить изменения: %s",
+        "address": {
+          "hostname": "Хост SMTP",
+          "port": "Порт",
+          "subtext": "Используете порт 25 для SMTP (или незашифрованные или с StartTLS) или порт 465 для SMTPS TLS-шифрованием."
+        },
+        "username": {
+          "label": "*_Username (optional)"
+        },
+        "password": {
+          "label": "*_Password (optional)"
+        },
+        "returnAddress": {
+          "label": "*_Sandstorm server's own email address",
+          "subtext": "*_Sandstorm will send login emails, notifications of granted access requests, and other emails from this address. It will also use this address in the SMTP envelope."
+        },
+        "submitButton": "*_Save Configuration",
+        "testButton": "*_Test",
+        "disableButton": "*_Disable email"
+      },
+      "emailTestPopup": {
+        "title": "*_Send a test email",
+        "testAddress": {
+          "label": "*_Send test mail to:"
+        },
+        "pending": "*_Sending...",
+        "submitButton": "*_Send test email",
+        "closeButton": "*_Close"
+      },
+      "emailDisablePopup": {
+        "title": "*_Really disable email?",
+        "explanation": "*_This will disable all outbound email delivery for this server, including sharing via email, email token login (if enabled), and email notifications to users.",
+        "disableButton": "*_Disable email",
+        "closeButton": "*_Close"
+      }
+    },
+    "personalization": {
+      "name": "*_Personalization",
+      "subtext": "*_Customize a splash page, terms of service, privacy policy, etc.",
+      "newAdminPersonalization": {
+        "serverTitle": {
+          "label": "*_Server title:",
+          "subtext": "*_The name of this server, as used when communicating with users."
+        },
+        "splashUrl": {
+          "label": "*_Splash URL (experimental):",
+          "subtext": "*_This web page will be displayed in the background behind the login dialog (the home page when logged out). For security reasons, the page must be hosted within this Sandstorm server's wildcard host (otherwise it will be blocked by <code>Content-Security-Policy</code>). We suggest using a static web publishing app like <a target=\"_blank\" href=\"https://apps.sandstorm.io/app/nqmcqs9spcdpmqyuxemf0tsgwn8awfvswc58wgk375g4u25xv6yh/?host=%s\">Hacker CMS</a> to host content.<strong>WARNING: This feature is experimental; in particular the style and positioning of the login box is subject to change without notice.</strong> Please let us know if you'd like to see it stabilize."
+        },
+        "signupDialog": {
+          "label": "*_Signup dialog:",
+          "subtext": "*_This text will be displayed to users who click on signup links."
+        },
+        "termsOfService": {
+          "label": "*_Terms of service URL:",
+          "placeholder": "*_https://example.com/tos",
+          "subtext": "*_If provided, new users will be required to agree to the linked terms of service."
+        },
+        "privacyPolicy": {
+          "label": "*_Privacy policy URL:",
+          "placeholder": "*_https://example.com/privacy",
+          "subtext": "*_If provided, new users will be required to agree to the linked privacy policy."
+        },
+        "whitelabeling": {
+          "title": "*_Whitelabeling",
+          "logo": {
+            "label": "*_Custom logo on sign-in dialog",
+            "resetButton": "*_Use default",
+            "uploadButton": "*_Upload logo"
+          },
+          "hideTroubleshooting": {
+            "label": "*_Hide troubleshooting button"
+          },
+          "hideAbout": {
+            "label": "*_Hide \"About Sandstorm\" links"
+          },
+          "hideSendFeedback": {
+            "label": "*_Hide \"Send feedback\" link"
+          },
+          "useServerTitleForHomeText": {
+            "label": "*_Use server title (above) for home link",
+            "subtext": "*_If enabled, changes the default label \"Sandstorm\" on the link at the very top left to match whatever you specified for the Server title above."
+          },
+          "customLoginProviderName": {
+            "label": "*_Custom login button text",
+            "subtext": "*_Replaces the text \"with LDAP\" and \"with SAML\" on the login page with the specified text."
+          }
+        },
+        "saveButton": "Сохранить"
+      }
+    },
+    "preinstalledApps": {
+      "name": "*_Pre-installed apps",
+      "subtext": "*_Choose apps to pre-install for new users.",
+      "newAdminPreinstalledApps": {
+        "explanation": "*_Apps you configure on this page to be pre-installed will automatically be installed (show under /apps) for new users.",
+        "productivitySuite": {
+          "label": "*_Productivity Suite",
+          "subtext": "*_We recommend pre-installing these core apps that are useful to most users."
+        },
+        "systemSuite": {
+          "label": "*_System apps",
+          "subtext": "*_We recommend pre-installing these system apps that greatly enhance the abilities of Sandstorm."
+        },
+        "allApps": {
+          "label": "*_All apps on market",
+          "subtext": "*_The checked apps below will be installed by default for all new users.",
+          "lessButton": "*_Show fewer apps",
+          "moreButton": "*_Show %s more apps"
+        },
+        "saveButton": "Сохранить"
+      },
+      "_appRow": {
+        "download": {
+          "success": "*_Downloaded",
+          "failed": "*_Failed"
+        }
+      }
+    },
+    "appSources": {
+      "name": "*_App sources",
+      "subtext": "*_Where to look for apps and app updates.",
+      "newAdminAppSources": {
+        "appMarketUrl": {
+          "label": "*_App market URL",
+          "subtext": "*_The \"Install...\" button on the Apps page will link to this URL."
+        },
+        "enableAppUpdates": {
+          "label": "*_Enable app update notifications",
+          "subtext": "*_Updates to apps will be automatically downloaded by the Sandstorm server daily and notifications sent to users asking if they want to update their installed apps."
+        },
+        "appIndexUrl": {
+          "label": "*_App index URL",
+          "subtext": "*_This is the URL that the Sandstorm server will check to learn about app updates."
+        },
+        "saveButton": "Сохранить",
+        "restoreButton": "*_Restore defaults"
+      }
+    },
+    "networking": {
+      "name": "*_Networking",
+      "altName": "*_Security",
+      "subtext": "*_Control how the network is accessed.",
+      "newAdminNetworking": {
+        "ipBlacklist": {
+          "label": "*_Server-side request IP blacklist:",
+          "subtext": "*_Users will be prohibited from making requests to these IP addresses. This includes making a request from an app, downloading an SPK file from a user-provided URL, etc. You may specify one IP address or network (in CIDR notation, e.g. \"127.0.0.0/8\") per line. The default value includes standard local and private network addresses. Note that when an HTTP proxy is in use, this setting may be ignored; the proxy must implement its own blacklist."
+        },
+        "saveButton": "Сохранить",
+        "restoreButton": "*_Restore defaults"
+      }
+    },
+    "users": {
+      "name": "*_Users",
+      "subtext": "*_Manage all users on this Sandstorm installation."
+    },
+    "userAccounts": {
+      "newAdminUserTableRow": {
+        "admin": {
+          "hint": "*_Admin",
+          "cap": "*_A"
+        },
+        "user": {
+          "hint": "*_User",
+          "cap": "*_U"
+        },
+        "visitor": {
+          "hint": "*_Visitor",
+          "cap": "*_V"
+        },
+        "unknownIdentity": "*_Unknown credential",
+        "unknownIdentifier": "*_unknown identifier",
+        "manageButton": "*_Manage"
+      },
+      "newAdminUserTable": {
+        "header": {
+          "name": "*_Name",
+          "credentials": "*_Credentials",
+          "created": "*_Created",
+          "lastActive": "*_Last Active",
+          "actions": "*_Actions"
+        },
+        "inviteLink": "*_Invite new user",
+        "notFound": "*_No users matched your filter.",
+        "processing": "*_Loading users..."
+      },
+      "newAdminUsers": {
+        "search": {
+          "placeholder": "*_search"
+        },
+        "filter": {
+          "explanation": "*_Show:",
+          "admin": "*_Admin",
+          "user": "*_User",
+          "visitor": "*_Visitor"
+        }
+      }
+    },
+    "userDetails": {
+      "newAdminUserDetailsIdentityTableRow": {
+        "profilePicture": {
+          "label": "*_Profile picture"
+        },
+        "handle": {
+          "title": "*_Handle",
+          "emails": "*_Emails"
+        },
+        "pronouns": {
+          "hint": "*_Pronouns",
+          "label": "*_Pronouns"
+        },
+        "emails": {
+          "hint": "*_Emails",
+          "label": "*_Emails",
+          "primary": "*_Primary",
+          "verified": "*_Verified",
+          "unverified": "*_Unverified",
+          "notFound": "*_No known emails."
+        },
+        "properties": {
+          "login": "*_Can log in",
+          "org": "*_Org. member"
+        },
+        "unkonwn": {
+          "profilePicture": {
+            "cell": "*_(unknown name)"
+          },
+          "service": {
+            "hint": "*_unknown service",
+            "label": "*_(unknown service)",
+            "cell": "*_(unknown name)"
+          },
+          "handle": {
+            "cell": "*_(unknown handle)"
+          },
+          "pronouns": {
+            "cell": "*_(unknown pronouns)"
+          },
+          "created": {
+            "cell": "*_unknown creation date"
+          },
+          "lastActive": {
+            "cell": "*_unknown activity date"
+          }
+        }
+      },
+      "newAdminUserDetailsIdentityTable": {
+        "header": {
+          "credential": "*_Credential",
+          "created": "*_Created",
+          "lastActive": "*_Last Active",
+          "properties": "*_Properties"
+        }
+      },
+      "newAdminUserDetails": {
+        "role": {
+          "title": "*_Role",
+          "admin": {
+            "label": "*_Admin",
+            "explanation": "*_Manages all accounts.  Can install apps, create grains, and administer the server.",
+            "isAdmin": "*_Current role",
+            "isNotAdmin": "*_Promote to admin"
+          },
+          "user": {
+            "label": "*_User",
+            "explanation": "*_Can install apps and create grains.",
+            "isUser": "*_Current role",
+            "isAdmin": "*_Demote to user",
+            "isNotUser": "*_Promote to user"
+          },
+          "visitor": {
+            "label": "*_Visitor",
+            "explanation": "*_Can use and re-share shared grains, but cannot create grains of their own nor install apps.",
+            "isVisitor": "*_Current role",
+            "isNotVisitor": "*_Demote to visitor"
+          }
+        },
+        "credentials": {
+          "title": "*_Credentials"
+        },
+        "profile": {
+          "title": "*_Profile"
+        },
+        "status": {
+          "title": "*_Status",
+          "deleting": "*_Suspended - Pending deletion %s",
+          "suspended": "*_Suspended",
+          "active": "*_Active",
+          "unsuspendButton": "*_Unsuspend account",
+          "suspendButton": "*_Suspend account",
+          "deleteButton": "*_Delete account"
+        },
+        "deletePopup": {
+          "title": "*_Delete %s",
+          "explanation": "*_You are about to mark %s's account for deletion. Once marked for deletion, this account will be suspended, and admins will have 7 days to cancel the pending deletion by returning to this page and clicking the \"Unsuspend Account\" button. %s will <strong>not</strong> be able to stop this suspension/deletion.",
+          "detail": "*_After 7 days, %s's account will be permanently deleted. Deleting this account will:",
+          "detail1": "*_Permanently delete any grains %s created",
+          "detail2": "*_Revoke all sharing links %s created",
+          "detail3": "*_Remove %s from all users' contact lists",
+          "detail4": "*_Delete all credentials owned by this account (except credentials also associated with another account).",
+          "deleteButton": "*_Delete account",
+          "cancelButton": "Отменить"
+        },
+        "suspendPopup": {
+          "title": "*_Suspend %s",
+          "detail": "*_Suspending this user account will:",
+          "detail1": "*_Prevent any grains created by %s from being opened",
+          "detail2": "*_Disable any sharing links created by %s",
+          "detail3": "*_This also applies to all credentials owned by this account (except credentials associated with another account)",
+          "suspendButton": "*_Suspend account",
+          "cancelButton": "Отменить"
+        },
+        "loading": "*_Loading user data..."
+      }
+    },
+    "userInvite": {
+      "newAdminUserInviteLink": {
+        "explanation": "*_You can invite others to create accounts on your server by giving them an account creation link. People you invite will be granted User permission and be able to install apps and create grains of their own. Alternatively, if you want to share a specific grain with someone, you can do that within the grain's \"Share Access\" menu.",
+        "title": "*_Create a link",
+        "invite": {
+          "explanation": "*_This will create an account creation link which you can send to someone.",
+          "createButton": "*_Create link"
+        }
+      },
+      "newAdminUserInviteEmail": {
+        "title": "*_Send an email",
+        "emailWarning": {
+          "explanation": "*_Email has not been configured, so sending invites via email is disabled.",
+          "configureLink": "*_Configure email"
+        },
+        "explanation": "*_This will create a link and send it in an email.",
+        "to": {
+          "label": "*_To:",
+          "placeholder": "*_alice@email.com\nbob@example.com",
+          "subtext": "*_Email addresses, one per line."
+        },
+        "subject": {
+          "label": "*_Subject:"
+        },
+        "body": {
+          "label": "*_Body:",
+          "subtext": "*_<code>$KEY</code> will be replaced with the newly-generated link."
+        },
+        "sendButton": "*_Send invite"
+      },
+      "newAdminUserInvite": {
+        "title": "*_Invite"
+      }
+    },
+    "systemStatus": {
+      "name": "*_System log",
+      "subtext": "*_View Sandstorm's debug log.",
+      "newAdminLogContents": {
+        "ellipsis": "*_..."
+      },
+      "newAdminStatus": {
+        "downloadButton": "*_Download full log"
+      }
+    },
+    "stats": {
+      "name": "*_Statistics",
+      "subtext": "*_View usage statistics for this server.",
+      "header": {
+        "date": "*_date",
+        "users": "*_users",
+        "grains": "*_grains",
+        "appName": "*_App name",
+        "owners": "*_owners",
+        "sharedUsers": "*_sharedUsers",
+        "daily": "*_daily",
+        "weekly": "*_weekly",
+        "monthly": "*_monthly",
+        "forever": "*_forever"
+      },
+      "body": {
+        "notFound": "*_There are no stats recorded yet.",
+        "loading": "*_Loading..."
+      },
+      "newAdminStats": {
+        "share": {
+          "title": "*_Publish anonymously to Sandstorm dev team",
+          "explanation": "*_We'd like to know how many Sandstorm users there are, to make graphs and such.  Is it okay to send the numbers on this page once a day to the Sandstorm team, so that we can add them to the totals?  Any stats you send are anonymous.",
+          "enableButton": "*_Send anonymous stats",
+          "disableButton": "*_Don't send",
+          "control": {
+            "explanation": "*_The developers of Sandstorm like to know how many Sandstorm users there are, to make graphs and such.  You can help us by opting in to sharing the numbers on this page once a day to the Sandstorm team, so that we can add them to our totals. Any stats shared are submitted anonymously.",
+            "label": "*_Anonymous stats reporting to sandstorm.io:",
+            "enabled": "*_Enabled",
+            "disabled": "*_Disabled",
+            "disableButton": "*_Disable",
+            "enableButton": "*_Enable"
+          }
+        },
+        "json": {
+          "title": "*_View as JSON",
+          "explanation": "*_If you want to integrate Sandstorm stats with an internal stats tool, use this secret link to retrieve the tables below as JSON. You can revoke the current link at any time by generating a new link.",
+          "label": "*_Stats JSON link:",
+          "regenerateButton": "*_Generate new link"
+        },
+        "userGrains": {
+          "title": "*_Users and grains",
+          "current": "*_Right now: __users__ users, __grains__ grains",
+          "today": "*_Today: __users__ users, __grains__ grains"
+        },
+        "apps": {
+          "title": "*_Apps",
+          "label": "*_Select a date:"
+        }
+      }
+    },
+    "maintenanceMessage": {
+      "name": "*_Maintenance message",
+      "subtext": "*_Communicate potential downtime to users.",
+      "newAdminMaintenance": {
+        "explanation": "*_You can set a maintenance message which will be shown to all users in the menu bar, on the top right. This is useful for announcing scheduled maintenance so users can be prepared to tolerate downtime. If the message text is empty, no message will be displayed.",
+        "variables": "*_You may use the following variables in the \"Message text\" field, which will be automatically substituted with useful values:",
+        "variable1": "*_<code>$TIME</code> : The time component of \"Maintenance time\", converted to the user's local time (eg. \"1:15:45 PM\")",
+        "variable2": "*_<code>$DATE</code> : The date component of \"Maintenance time\", converted to the user's local time (eg. \"6/19/2015\")",
+        "variable3": "*_<code>$IN_COUNTDOWN</code> : An active countdown until \"Maintenance time\" (eg. \"in 3 days\" or \"in 1 minute\"). Displays \"any moment\" at the time specified in \"Maintenance time\" and then disappears after an hour.",
+        "messageText": {
+          "label": "*_Message text:",
+          "subtext": "*_"
+        },
+        "maintenanceTime": {
+          "label": "*_Maintenance time:",
+          "subtext": "*_The time you intend to start performing maintenance, formatted like \"%s\"."
+        },
+        "url": {
+          "label": "*_Link URL (optional):",
+          "subtext": "*_If given, the maintenance message will render as a clickable link to the provided URL."
+        },
+        "saveButton": "*_Set message"
+      }
+    },
+    "networkCapabilities": {
+      "name": "*_Network capabilities",
+      "subtext": "*_Manage direct network access for grains.",
+      "newAdminNetworkCapabilitiesTableCapabilityRow": {
+        "adminAccount": "*_Admin account %s",
+        "unknownGranter": "*_Unknown granter",
+        "anyone": "*_Anyone with the token",
+        "unknownRecipient": "*_Unknown recipient",
+        "revoked": "*_Revoked",
+        "revokeButton": "*_Revoke"
+      },
+      "newAdminNetworkCapabilitiesTable": {
+        "header": {
+          "grantBy": "*_Granted by",
+          "grantTo": "*_Granted to",
+          "grantTime": "*_Time",
+          "actions": "*_Actions"
+        },
+        "notFound": "*_No capabilities found."
+      },
+      "newAdminNetworkCapabilitiesSection": {
+        "filter": {
+          "label": "*_Showing:",
+          "active": "*_Active (%s)",
+          "revoked": "*_Revoked (%s)"
+        }
+      },
+      "newAdminNetworkCapabilities": {
+        "networkCaps": "*_Outbound network access",
+        "networkCapsTls": "*_TLS-encrypted outbound network access",
+        "interfaceCaps": "*_Inbound network access"
+      }
+    },
+    "hostingManagement": {
+      "name": "*_Hosting management",
+      "newAdminHostingManagement": {
+        "explanation": "*_This feature is experiemental and only works with the LDAP login provider at the moment. Use with caution.",
+        "quotaEnabled": {
+          "label": "*_Enable quota for users",
+          "subtext": "*_Enable Quota management on this server. This requires both SAML and LDAP to be configured, and email addresses will be used to match between the two."
+        },
+        "quotaLdapAttribute": {
+          "label": "*_LDAP quota attribute",
+          "subtext": "*_This is the attribute name that will be looked up from LDAP to determine quota for a user."
+        },
+        "billingPromptUrl": {
+          "label": "*_Billing prompt url",
+          "subtext": "*_This is the url that will be used in the billing prompt."
+        },
+        "saveButton": "Сохранить",
+        "restoreButton": "*_Restore defaults"
+      }
+    }
+  },
+  "people": {
+    "title": "*_People"
+  },
+  "sharingLinks": {
+    "title": "*_Sharing Links"
+  },
+  "apps": {
+    "title": "*_Apps",
+    "appList": {
+      "uninstallingHint": "*_Done uninstalling",
+      "doneUninstalling": "*_Done uninstalling",
+      "uninstallHint": "*_Uninstall an app",
+      "uninstallButton": "*_Uninstall...",
+      "uploadApp": "*_Upload app...",
+      "searchHint": "*_Search",
+      "search": "*_search",
+      "mostUsed": "*_Most used",
+      "allApps": "*_All apps",
+      "install": "*_Install...",
+      "fromMarket": "*_from app market",
+      "uninstall": "*_Uninstall",
+      "noMatchApp": "*_You have no installed apps with that name. Try <a href=\"__url__\">searching on the app market &raquo;</a>",
+      "unauthorized": "*_Unauthorized! :(",
+      "unauthorizedText": "*_This is a private Sandstorm server. In order to install apps, you need to be invited by the admin. The admin can invite you from the admin panel.",
+      "intro": "*_<strong>Welcome!</strong><br>Create documents, chat rooms, blogs, and more.<br><br>Get started by installing an app.",
+      "doneButton": "*_Got it"
+    },
+    "install": {
+      "sandstormAppInstallPage": {
+        "title": "*_Install app",
+        "error": {
+          "title": "*_Failed to install app",
+          "retryButton": "*_Try Again"
+        },
+        "stepWait": {
+          "title": "*_Waiting for write access..."
+        },
+        "stepDownload": {
+          "title": "*_Downloading...",
+          "cancelButton": "Отменить"
+        },
+        "stepVerify": {
+          "title": "*_Verifying..."
+        },
+        "stepUnpack": {
+          "title": "*_Unpacking..."
+        },
+        "stepAnalyze": {
+          "title": "*_Analyzing..."
+        },
+        "stepConfirm": {
+          "upgrade": {
+            "explanation": "*_You have an older version of this app installed.  Do you want to upgrade?",
+            "button": "*_Upgrade %s"
+          },
+          "downgrade": {
+            "explanation": "*_You already have a newer version of this app installed.  Are you sure you want to revert to this older version?",
+            "button": "*_Downgrade %s"
+          },
+          "install": {
+            "button": "*_Install %s"
+          }
+        },
+        "stepRun": {
+          "title": "*_%s installed",
+          "explanation": "*_Installation complete.",
+          "appDetailsLink": "*_Go to %s"
+        },
+        "stepDelete": {
+          "title": "*_Deleting",
+          "explanation": "*_Server is currently deleting this app..."
+        },
+        "stepFailed": {
+          "title": "*_Failed",
+          "explanation": "*_Installation failed: %s"
+        }
+      }
+    },
+    "appDetails": {
+      "sandstormAppDetailsPage": {
+        "newerVersion": {
+          "explanation": "*_Some of your files were made with a newer version of this app.  They will keep using the newer version, as going backwards could break them."
+        },
+        "olderVersion": {
+          "explanation": "*_Some of your grains were made with an older version of this app.  Upgrade them?",
+          "upgradeButton": "*_Upgrade Grains"
+        },
+        "search": {
+          "hint": "*_Search",
+          "placeholder": "*_search"
+        },
+        "trash": {
+          "explanation": "*_Grains will be permanently removed after 30 days in the trash. To keep a grain, restore it to the Main list."
+        },
+        "noGrains": {
+          "notFound": "*_<strong>No matching grains found.</strong>",
+          "inTrash": "*_Some grains in your trash match your search.",
+          "trashButton": "*_View trash"
+        }
+      },
+      "sandstormAppDetails": {
+        "websiteLink": "*_Website",
+        "appMarketLink": "*_App market",
+        "sourceCodeLink": "*_Source",
+        "bugReportLink": "*_Report issue",
+        "mainListButton": "*_View main list",
+        "trashButton": "*_View trash",
+        "uninstallButton": "*_Uninstall",
+        "restoreButton": "*_Restore grain backup...",
+        "version": {
+          "label": "*_Version"
+        },
+        "lastUpdate": {
+          "label": "*_Last Updated",
+          "unknown": "*_<unknown>"
+        },
+        "publisher": {
+          "label": "*_Signed by"
+        },
+        "hasFingerprint": "*_The app publisher has proven using PGP that they control these accounts.",
+        "noFingerprint": "*_This app has no signature from its creator; its author cannot be verified."
+      }
+    }
+  },
+  "accounts": {
+    "title": "*_Account settings",
+    "accountSettings": {
+      "sandstormAccountSettings": {
+        "title": "*_Account",
+        "identities": {
+          "title": "*_My Profile",
+          "success": "*_Success: %s",
+          "linkedCredentials": "*_Linked credentials",
+          "linkNewIdentity": {
+            "title": "*_Link new credential:",
+            "cancelButton": "Отменить",
+            "linkButton": "*_Link new credential",
+            "logoutAllButton": "*_Log out all other sessions"
+          },
+          "email": {
+            "title": "*_Primary e-mail address for service-related notifications",
+            "primary": "*_Primary",
+            "primaryButton": "*_Set as primary",
+            "notFound": "*_ No verified emails! ",
+            "addNew": "*_Add new e-mail address"
+          }
+        },
+        "billing": {
+          "title": "*_Billing"
+        },
+        "deleteAccount": {
+          "title": "*_Delete account",
+          "button": "*_Delete your account"
+        },
+        "deletePopup": {
+          "title": "*_Delete your account",
+          "explanation": "*_You are about to mark your account for deletion. Once marked for deletion, your account will be suspended, and you will have 7 days to cancel the pending deletion by logging back into your account.",
+          "results": "*_After 7 days, your account will be permanently deleted. Deleting your account will:",
+          "result1": "*_Permanently delete any grains you created",
+          "result2": "*_Revoke all sharing links you created",
+          "result3": "*_Remove you from all users' contact lists",
+          "result4": "*_Delete all credentials owned by your account (except credentials also associated with another account).",
+          "confirm": "*_Please type \"delete my account\" below to confirm.",
+          "goodbye": "*_We're sorry to see you go. Feel free to share any feedback you have with the server admin.",
+          "feedbackPlaceholder": "*_Optional",
+          "deleteButton": "*_Delete account",
+          "cancelButton": "Отменить"
+        }
+      },
+      "sandstormAccountsFirstSignIn": {
+        "title": "*_Confirm your profile",
+        "success": "*_Success: %s"
+      },
+      "accountSuspended": {
+        "title": "*_This account has been suspended by you.",
+        "deletedIn": "*_This account will be deleted in %s. Would you like to cancel deletion and restore this account?",
+        "suspended": "*_This account is suspended and all of its grains and shares are disabled. Would you like to restore this account?",
+        "restoreButton": "*_Restore account",
+        "logoutButton": "*_Logout"
+      },
+      "_accountProfileEditor": {
+        "picture": {
+          "label": "*_Profile picture:",
+          "uploadButton": "*_Upload new picture",
+          "subtext": "*_This picture will be shown to other users to help identify you.",
+          "maxSize": "*_512x512px, 64KiB max."
+        },
+        "fullName": {
+          "label": "*_Full name:",
+          "placeholder": "*_full name",
+          "subtext": "*_Your regular first and last name, as you would like it displayed to others. This does not have to be your real name."
+        },
+        "handle": {
+          "label": "*_Handle:",
+          "placeholder": "*_handle",
+          "hint": "*_Handles must start with a lower-case letter and contain only lower-case letters, digits, and underscores.",
+          "subtext": "*_To be displayed in apps that use handles. Your handle must start with a letter and contain only lower-case letters, digits, and underscores."
+        },
+        "emailList": {
+          "label": "*_E-mail:"
+        },
+        "pronoun": {
+          "label": "*_Preferred pronoun:",
+          "neutral": "*_they (unspecified)",
+          "male": "*_he/him (male)",
+          "female": "*_she/her (female)",
+          "robot": "*_it (robot)"
+        },
+        "agreedToTerms": {
+          "agreeTo": "*_ I have read and agree to the",
+          "termsOfServiceLink": "*_Terms of Service",
+          "and": "*_ and ",
+          "privacyLink": "*_Privacy policy"
+        },
+        "saveButton": "Сохранить",
+        "continueButton": "*_Continue",
+        "cancelButton": "Отменить"
+      }
+    },
+    "loginButtons": {
+      "icon": {
+        "info": "*_i"
+      },
+      "loginButtons": {
+        "createButton": "*_Create account",
+        "signInButton": "*_Sign in"
+      },
+      "accountButtons": {
+        "loading": "*_Loading..."
+      },
+      "_loginButtonsLoggedInDropdown": {
+        "revealIdentity": "*_Reveal identity",
+        "title": "*_Account",
+        "sendFeedback": "*_Send feedback",
+        "referralProgram": "*_Referral program",
+        "signOutButton": "*_Sign out"
+      },
+      "_loginButtonsLoggedOutDropdown": {
+        "demo": {
+          "title": "*_Create account",
+          "explanation": "*_Your demo data will be transferred to your new account."
+        },
+        "title": "Войти",
+        "shared": {
+          "explanation": "*_Sign in so that collaborators know who you are."
+        },
+        "signInButton": "Войти",
+        "anonymousButton": "*_Stay anonymous"
+      },
+      "oauthLoginButton": {
+        "with": "*_with "
+      },
+      "devLoginForm": {
+        "label": "*_with a Dev account",
+        "hint": "*_unexpand",
+        "alice": "*_Alice (admin)",
+        "bob": "*_Bob",
+        "carol": "*_Carol",
+        "dave": "*_Dave",
+        "customPlaceholder": "*_Eve",
+        "customButton": "*_Custom"
+      },
+      "loginButtonsList": {
+        "configure": "*_configure login",
+        "troubleshooting": "*_troubleshooting",
+        "about": "*_about Sandstorm"
+      },
+      "emailLoginForm": {
+        "description": "*_with e-mail",
+        "sendButtonText": "*_send Login Email"
+      },
+      "emailAuthenticationForm": {
+        "hint": "*_Passwordless E-mail Login allows you to log in using an e-mail address. No password is required; instead, every time you log in, we send you a new email confirmation code. You will only need to log in once per device.",
+        "token": {
+          "explanation": "*_We've sent a login e-mail to %s. It may take a few moments to show up in your inbox.",
+          "label": "*_Enter your token:",
+          "confirmButton": "*_Confirm",
+          "cancelButton": "Отменить"
+        },
+        "disabled": "*_A server admin must enable email authentication before you can confirm your email."
+      },
+      "ldapLoginForm": {
+        "username": {
+          "label": "имя пользователя",
+          "hint": "*_This is your LDAP username. It will be the name that you normally use to log in to other internal services at your company."
+        },
+        "password": {
+          "label": "пароль",
+          "hint": "*_This is your LDAP password. It will be the password that you normally use to log in to other internal services at your company."
+        },
+        "loginButton": "Войти"
+      },
+      "_loginButtonsSeparator": {
+        "or": "или"
+      }
+    },
+    "identity": {
+      "identityLoginInterstitial": {
+        "title": "Вход в систему…",
+        "loading": "загрузка…",
+        "logoutButton": "Выйти",
+        "cancelButton": "Отменить",
+        "goBackButton": "Назад",
+        "create": "создание учётной записи…",
+        "createFailed": "Не удалось создать учётную запись.",
+        "loginAccount": "вход в систему‥",
+        "loginAccountFailed": "Не удалось войти в систему",
+        "loginToken": "*_logging back in to account...",
+        "loginTokenFailed": "*_Failed to resume session.",
+        "link": "*_linking credential to account...",
+        "success": "*_Unlinked credential from %s",
+        "explanation": "*_You have authenticated as this credential",
+        "warning": "*_but that is not a login credential for any account.",
+        "moreIdentities": "*_The following credentials can log in to your credential's accounts:",
+        "unlinkButton": {
+          "hint": "*_Unlink your credential from this account.",
+          "text": "*_unlink"
+        },
+        "unlink": {
+          "explanation": "*_Are you sure you want to unlink your credential from the account of %s?",
+          "unlinkButton": "*_Unlink",
+          "cancelButton": "Отменить"
+        }
+      },
+      "identityManagementButtons": {
+        "toggleLogin": {
+          "label": "*_Allow this credential to log in to your account.",
+          "unlinkButton": "*_Unlink"
+        }
+      },
+      "loginIdentitiesOfLinkedAccounts": {
+        "show": {
+          "explanation": "*_This credential is shared with other accounts. Those accounts have the following login credentials:",
+          "unlinkButton": "*_unlink",
+          "hideButton": "*_hide other accounts"
+        },
+        "hide": {
+          "explanation": "*_This credential is shared with at least one other account.",
+          "showButton": "*_show other accounts"
+        }
+      },
+      "identityCardSignInButton": {
+        "hint": "Войти от имени %s",
+        "title": "Войти"
+      },
+      "accountCardSignInButton": {
+        "reSign": "*_To sign out of your current account and sign in as this user, choose how to sign in:",
+        "howToSignIn": "*_Choose how to sign in:"
+      }
+    },
+    "tokenTemplates": {
+      "_emailTokenError": {
+        "title": "*_Invalid authentication code. If it has been more than 15 minutes, the token has expired, otherwise you may have simply mistyped it."
+      },
+      "_emailLinkIdentityError": {
+        "title": "*_To confirm your email address, you must be logged in as the account that created this link."
+      },
+      "addNewVerifiedEmailPowerboxConfiguration": {
+        "email": {
+          "placeholder": "*_enter email address",
+          "selectButton": "*_Select",
+          "sendButton": "*_Send confirmation email"
+        },
+        "sendingTo": "*_Sending to %s",
+        "resetButton": "*_Try a different address",
+        "token": {
+          "placeholder": "*_enter your token",
+          "confirmButton": "*_Confirm"
+        },
+        "verifying": "Проверка токена…"
+      }
+    }
+  },
+  "wizard": {
+    "setupWizardLoading": {
+      "loading": "Загрузка…"
+    },
+    "setupWizardProgressBar": {
+      "identityProviders": "Провайдеры входа",
+      "organization": "Организация",
+      "email": "Электронная почта",
+      "preinstalledApps": "Предустановленные приложения",
+      "adminAccount": "Учётная запись администратора"
+    },
+    "setupWizardHelpFooter": {
+      "needHelp": "Нужна помощь?",
+      "documentation": "Документация (на английском)",
+      "emailSupport": "Поддержка по электронной почте",
+      "systemLog": "Системный журнал"
+    },
+    "setupWizardSystemLog": {
+      "header": {
+        "label": "Системный журнал",
+        "downloadButton": "Скачать системный журнал"
+      },
+      "permissionDenied": "Вы не можете просматривать системный журнал, потому что вы не вошли в систему как администратор и у вас нет токена установки."
+    } ,
+    "setupWizardIntro": {
+      "title": "Добро пожаловать в Sandstorm!",
+      "revisitWizardLink": "Вернуться к мастеру установки",
+      "noIdpEnabled": {
+        "explanation": "*_This Sandstorm server has been set up previously, but due to a change in <code>sandstorm.conf</code>, you'll need to configure login providers again."
+      },
+      "idpEnabled": {
+        "explanation": "*_This Sandstorm server is ready to roll. You can adjust server settings, including which providers are enabled and how Sandstorm sends email.",
+        "turnUserIntoAdmin": "*_You can also turn an existing user into an administrator.",
+        "isAdmin": {
+          "adminPanelLink": "Перейти к панели администратора",
+          "suButton": "Дать себе права администратора"
+        },
+        "isNotAdmin": {
+          "explanation": "Чтобы сделать аккаунт администратором, пожалуйста, войдите в систему:",
+          "signInLabel": "Войти",
+          "signInButton": "Войти чтобы делать аккаунт администратором"
+        }
+      },
+      "setupButton": "Начать установку Sandstorm"
+    },
+    "setupWizardIdentity": {
+      "title": "*_Login providers",
+      "explanation1": "*_To use Sandstorm, you need to create a user account.  Every user account on Sandstorm is backed by an login provider.  You'll use this login provider to authenticate as the first administrator of this Sandstorm install.",
+      "explanation2": "*_Configure the login provider or providers you wish to enable.",
+      "nextButton": "Далее",
+      "backButton": "Назад"
+    },
+    "setupWizardOrganization": {
+      "title": "*_Organization settings",
+      "error": "*_Failed to save change: %s",
+      "membership": {
+        "title": "Членство организации",
+        "emailToggle": {
+          "label": "Пользователи, аутентифицированы по адресом электронной почты",
+          "subtext": "Примечание: отключено, поскольку вход по электронной почтой не сконфигурирован."
+        },
+        "emailDomain": {
+          "label": "Домен:",
+          "subtext": "Пользователи с адресом электронной почты на этом домене будут членами организации этого сервера."
+        },
+        "gappsToggle": {
+          "label": "Пользователи, аутентифицированы по GSuite",
+          "subtext": "Примечание: отключено, поскольку Google Sign-In не сконфигурировано."
+        },
+        "gappsDomain": {
+          "label": "Домен:",
+          "subtext": "*_Users with a Google Apps for Work account under this domain will be members of this server's organization."
+        },
+        "ldapToggle": {
+          "label": "*_Users authenticated via LDAP",
+          "subtext": "*_Note: disabled because LDAP login is not configured."
+        },
+        "samlToggle": {
+          "label": "*_Users authenticated via SAML",
+          "subtext": "*_Note: disabled because SAML login is not configured."
+        }
+      },
+      "settings": {
+        "title": "Настройки организации",
+        "disallowGuests": {
+          "label": "Запретить сотрудничество с пользователями за пределами организации.",
+          "subtext": "Пользователям будет необходимо войти в систему как член вашей организации, чтобы просмотреть ссылки для обмена.  Гостевой доступ будет отключен."
+        },
+        "shareContacts": {
+          "label": "*_Make all organization users visible to each other",
+          "subtext": "*_This setting automatically adds users within the organization to each other's contact list so that they can share grains with each other.  Disable this if you have some users whose identity should stay hidden from other users."
+        }
+      },
+      "saveButton": "Сохранить и продолжить",
+      "backButton": "Назад"
+    },
+    "setupWizardEmailConfig": {
+      "title": "Доставка электронной почты",
+      "explanation": "*_Sandstorm needs a way to send email.  You can skip this step (unless you're using email login), but email-related features will be unavailable until you configure email in the future.",
+      "moreDetail": "*_<strong>How Sandstorm uses email:</strong> Sandstorm sends email notifications, and Sandstorm apps can send email notifications, too. Every app receives a unique email address, so Sandstorm needs to send email from a variety of \"From:\" addresses. Therefore, Gmail SMTP won't work, but there are other free services. See more info in <a target=\"_blank\" href=\"https://docs.sandstorm.io/en/latest/administering/email/#outgoing-smtp\">the docs</a>.",
+      "error": "*_Failed to save changes: %s",
+      "hostPort": {
+        "host": "Хост SMTP",
+        "port": "Порт",
+        "subtext": "Используете порт 25 для SMTP (или незашифрованные или с StartTLS) или порт 465 для SMTPS TLS-шифрованием."
+      },
+      "username": {
+        "label": "*_Username (optional)"
+      },
+      "password": {
+        "label": "*_Password (optional)"
+      },
+      "email": {
+        "label": "*_Sandstorm server's own email address",
+        "subtext": "*_Sandstorm will send login emails, notifications of granted access requests, and other emails from this address. It will also use this address in the SMTP envelope."
+      },
+      "saveButton": "*_Save and continue",
+      "skipButton": "*_Skip for now",
+      "testButton": "*_Test",
+      "backButton": "Назад"
+    },
+    "setupWizardPreinstalled": {
+      "title": "Настройка предустановленных приложений",
+      "explanation": "*_Please wait while Sandstorm installs the following Productivity Suite apps that are useful for most users. You will be able to configure all pre-installed apps in the Admin Settings panel after setup.",
+      "downloaded": "*_Downloaded",
+      "failed": "*_Failed",
+      "loading": "*_Please wait, loading app index...",
+      "nextButton": "*_Next",
+      "skipButton": "*_Skip for now",
+      "backButton": "Назад"
+    },
+    "setupWizardLoginUser": {
+      "title": "*_Create admin account",
+      "firstLogin": {
+        "title": "Подтвердить свой профиль"
+      },
+      "isAdmin": "Отлично!  Ваша учетная запись имеет права администратора.",
+      "hasAdmin": {
+        "explanation": "*_This Sandstorm server already has an admin user, but if you want, you can also make yourself an admin.",
+        "adminButton": "Стать администратором"
+      },
+      "makeYouAnAdmin": "*_Making you an admin on this server...",
+      "loggedOut": {
+        "explanation": "*_You can now create an admin account on this Sandstorm server.",
+        "description": "*_Log in to create your admin account",
+        "dialogLabel": "*_Create account"
+      },
+      "finishButton": "Завершить",
+      "backButton": "Назад"
+    },
+    "setupWizardSuccess": {
+      "title": "Готов ехать!",
+      "serverIsReady": "Ваш сервер Sandstorm готов.",
+      "whatsNext": "Что бы вы хотели сделать дальше?",
+      "addUsersLink": "Добавить пользователей",
+      "editSettingsLink": "Изменить другие настройки",
+      "sandstormLink": "Начать использовать Sandstorm",
+      "backButton": "Назад"
+    },
+    "setupWizardVerifyToken": {
+      "title": "Проверка токена…",
+      "explanation": "*_Sorry, it looks like your setup token has expired.",
+      "howToFix": "*_Generate a new one now from the command line by running <code>sandstorm admin-token</code> to access the setup wizard."
+    },
+    "setupWizardTokenExpired": {
+      "title": "*_Setup token required",
+      "alreadySetup": "*_This server is already set up, so we recommend administering it via the main",
+      "adminRootLink": "*_administration panel",
+      "explanation": "*_To use this server's setup page, you need a valid setup token.",
+      "howToFix": "*_Generate a new one now from the command line by running <code>sandstorm admin-token</code> and following the link it outputs."
+    }
+  },
+  "packages": {
+    "topbar": {
+      "updated": "Sandstorm обновлено — Нажмите здесь, чтобы перезагрузить",
+      "apps": "Приложения",
+      "grains": "Песчинки",
+      "oasis": "*_Start collaborating with others by using Sandstorm on Oasis:",
+      "createAccount": "Создать бесплатный аккаунт »",
+      "demoHint": "*_Your demo data will be transferred.",
+      "selfHostHint": "*_Or, run Sandstorm on your own server (it's open source):",
+      "signUp": "*_Sign up within:",
+      "close": "Закрыть"
+    },
+    "powerbox": {
+      "title": "Запрос Powerbox",
+      "inputToken": "Пожалуйста, вводите токена API:",
+      "importToken": "*_Import token",
+      "selected": "Выбрано:",
+      "selectOne": "Выбрать одно:",
+      "noGrain": "*_No grains can provide the requested interface.",
+      "loading": "Загузка…"
+    }
+  }
+}
