@@ -10,7 +10,7 @@
       },
       "adminAlert": {
         "icon": "!",
-        "title": "*Уведомление от администратора"
+        "title": "Уведомление от администратора"
       },
       "demoModal": {
         "header": "Sandstorm—устанавливаемый прогаммный пакет веб-производительности.",
@@ -154,8 +154,8 @@
       },
       "terms": {
         "license": "Лицензия",
-        "terms": "*_Terms of service",
-        "privacy": "*_Privacy policy"
+        "terms": "Условия использования",
+        "privacy": "Политика конфиденциальности"
       }
     }
   },
@@ -192,22 +192,22 @@
       "signInPlease": "*_Please sign in to request access."
     },
     "invalidToken": {
-      "invalidToken": "*_Invalid token: %s"
+      "invalidToken": "Неверный токен: %s"
     },
     "revokedShareLink": {
       "linkRevoked": "*_Sorry, this link has been revoked."
     },
     "grainTitle": {
-      "was": "*_was: %s",
-      "renamedFrom": "*_renamed from: %s"
+      "was": "была: %s",
+      "renamedFrom": "переименована из: %s"
     },
     "grainDeleteButton": {
-      "hint": "*_Move to trash",
-      "text": "*_Move to trash"
+      "hint": "Переместить в корзину",
+      "text": "Переместить в корзину"
     },
     "grainDebugLogButton": {
-      "hint": "*_Show Debug Log",
-      "text": "*_Log"
+      "hint": "Показаит журнал отладки",
+      "text": "Журнал"
     },
     "grainBackupButton": {
       "hint": "Скачать резервную копию",
@@ -215,16 +215,16 @@
     },
     "grainBackupPopup": {
       "title": "Скачать резервную копию",
-      "warning": "*_Warning! Restoring this backup might not work how you expect it to.",
-      "processing": "*_Preparing backup...",
+      "warning": "Предупреждение!  Восстановление этой резервной копии может работать не так, как вы ожидайте.",
+      "processing": "Подготовка резервной копии…",
       "cancelHint": "отменить",
       "cancel": "Отменить",
-      "confirmHint": "*_download backup",
+      "confirmHint": "Скачать резервную копию",
       "confirm": "Скачать резервную копию"
     },
     "grainRestartButton": {
       "hint": "Перезапустить приложение",
-      "text": "*_Restart"
+      "text": "Перезапуск"
     },
     "grainApiTokenButton": {
       "hint": "*_Get webkey",
@@ -310,36 +310,36 @@
     },
     "grainPowerboxOfferPopup": {
       "title": "*_Powerbox Offer",
-      "dismiss": "*_Dismiss"
+      "dismiss": "Отклонить"
     },
     "share": {
-      "grainNotFoundWithId": "*_No grain found with ID %s. Maybe you need to sign in to a different account?",
-      "signIn": "*_You must be signed in to grant access to a grain."
+      "grainNotFoundWithId": "Песчинка с идентификатором %s не была найдена.  Возможно, вам нужно войти в другую учёную запись.",
+      "signIn": "Необходимо войти в систему чтобы предоставить доступ к песчинке."
     },
     "grainlist": {
       "sandstormGrainListPage": {
         "introButton": {
-          "hint": "*_What is a grain?"
+          "hint": "Что такая песчинка?"
         },
-        "mainListButton": "*_View main list",
-        "trashButton": "*_View trash (%s)",
-        "restoreButton": "*_Restore backup...",
+        "mainListButton": "Посмотреть основной список",
+        "trashButton": "Посмотреть корзину (%s)",
+        "restoreButton": "Восстановление резервной копии…",
         "search": {
-          "placeholder": "*_search"
+          "placeholder": "Поиск"
         },
         "usageInfo": {
-          "quota": "*___count__ of __quota__ grains",
-          "size": "*___size__ of __total__ used"
+          "quota": "*___count__ из __quota__ песчинок",
+          "size": "*___size__ из __total__ использовано"
         },
         "trash": {
-          "emptyButton": "*_Empty all trash",
+          "emptyButton": "Очистить корзину",
           "explanation": "*_(Grains will be permanently removed after 30 days in the trash. To keep a grain, restore it to the Main list.)"
         },
         "noGrains": {
           "notFound": "*_<strong>No matching grains found.</strong>",
           "inTrash": "*_Some grains in your trash match your search.",
           "trashButton": "*_View trash",
-          "empty": "*_<strong>Trash is empty.</strong>",
+          "empty": "<strong>Корзина пуста.</strong>",
           "explanation": "*_You don't have any grains yet.",
           "hasApps": "*_Select an app and create your first grain.",
           "hasNoApp": "*_Install an app to create your first grain."
@@ -1706,9 +1706,9 @@
         "label": "*_Sandstorm server's own email address",
         "subtext": "*_Sandstorm will send login emails, notifications of granted access requests, and other emails from this address. It will also use this address in the SMTP envelope."
       },
-      "saveButton": "*_Save and continue",
-      "skipButton": "*_Skip for now",
-      "testButton": "*_Test",
+      "saveButton": "Сохранить и продолжить",
+      "skipButton": "Пропустить сейчас",
+      "testButton": "Проверить",
       "backButton": "Назад"
     },
     "setupWizardPreinstalled": {
@@ -1717,25 +1717,25 @@
       "downloaded": "*_Downloaded",
       "failed": "*_Failed",
       "loading": "*_Please wait, loading app index...",
-      "nextButton": "*_Next",
-      "skipButton": "*_Skip for now",
+      "nextButton": "Далее",
+      "skipButton": "Пропустить сейчас",
       "backButton": "Назад"
     },
     "setupWizardLoginUser": {
-      "title": "*_Create admin account",
+      "title": "Создать учётную запись администратора",
       "firstLogin": {
         "title": "Подтвердить свой профиль"
       },
       "isAdmin": "Отлично!  Ваша учетная запись имеет права администратора.",
       "hasAdmin": {
-        "explanation": "*_This Sandstorm server already has an admin user, but if you want, you can also make yourself an admin.",
+        "explanation": "Этот сервер Sandstorm уже имеет администратора, но если вы хотите, вы также можете сделать себя администратором.",
         "adminButton": "Стать администратором"
       },
       "makeYouAnAdmin": "*_Making you an admin on this server...",
       "loggedOut": {
         "explanation": "*_You can now create an admin account on this Sandstorm server.",
-        "description": "*_Log in to create your admin account",
-        "dialogLabel": "*_Create account"
+        "description": "Войти, чтобы создать свою учётную запись администратора",
+        "dialogLabel": "Создать учётную запись"
       },
       "finishButton": "Завершить",
       "backButton": "Назад"
@@ -1751,11 +1751,11 @@
     },
     "setupWizardVerifyToken": {
       "title": "Проверка токена…",
-      "explanation": "*_Sorry, it looks like your setup token has expired.",
-      "howToFix": "*_Generate a new one now from the command line by running <code>sandstorm admin-token</code> to access the setup wizard."
+      "explanation": "Извините, похоже, что срок вашего токена установки истек.",
+      "howToFix": "Теперь создайте новый из командной строки, запустив <code>sandstorm admin-token</code> для доступа к мастеру установки."
     },
     "setupWizardTokenExpired": {
-      "title": "*_Setup token required",
+      "title": "Требуется токен установки",
       "alreadySetup": "*_This server is already set up, so we recommend administering it via the main",
       "adminRootLink": "*_administration panel",
       "explanation": "*_To use this server's setup page, you need a valid setup token.",
@@ -1777,10 +1777,10 @@
     "powerbox": {
       "title": "Запрос Powerbox",
       "inputToken": "Пожалуйста, вводите токена API:",
-      "importToken": "*_Import token",
+      "importToken": "Импортировать токен",
       "selected": "Выбрано:",
       "selectOne": "Выбрать одно:",
-      "noGrain": "*_No grains can provide the requested interface.",
+      "noGrain": "Ни одна песчинка не может предоставить запрошенный интерфейс.",
       "loading": "Загузка…"
     }
   }
