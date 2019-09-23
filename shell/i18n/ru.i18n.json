@@ -265,7 +265,7 @@
     "emailInviteTab": {
       "demoModeAlert": "*_Sharing emails cannot be sent while in demo mode. Create an account to send sharing emails, or get a shareable link instead.",
       "personalMessagePlaceholder": "*_Type a personal message (optional)...",
-      "send": "*_Send",
+      "send": "Отправить",
       "sending": "*_Sending...",
       "success": "*_Successfully sent.",
       "reset": "*_+ Send more invites",
@@ -276,7 +276,7 @@
       "withoutRoles": "*_Anyone with this link can access the grain.",
       "labelPlaceholder": "*_Label (optional)",
       "labelExplanation": "*_Use a label to remind yourself to whom you sent this unique link.",
-      "create": "*_Create",
+      "create": "Создать",
       "creating": "*_Generating...",
       "success": "*_Copy this link:",
       "reset": "*_+ Create another link",
@@ -340,7 +340,7 @@
           "inTrash": "*_Some grains in your trash match your search.",
           "trashButton": "*_View trash",
           "empty": "<strong>Корзина пуста.</strong>",
-          "explanation": "*_You don't have any grains yet.",
+          "explanation": "У вас ещё нет песчинок.",
           "hasApps": "*_Select an app and create your first grain.",
           "hasNoApp": "*_Install an app to create your first grain."
         },
@@ -352,16 +352,16 @@
         },
         "tableHeader": {
           "title": "*_Name",
-          "size": "*_Size",
+          "size": "Размер",
           "lastUsed": "*_Last activity",
           "ownership": "*_Mine/Shared",
           "collaborators": "*_Collaborators"
         },
         "tableBody": {
-          "was": "*_(was: %s)",
+          "was": "(была: %s)",
           "renamedFrom": "*_(renamed from: %s)",
           "new": "*_Unopened",
-          "mine": "*_My grain",
+          "mine": "Моя песчинка",
           "shared": "*_Shared with me"
         }
       },
@@ -382,19 +382,19 @@
       },
       "dismissButton": {
         "hint": "*_Ignore the above updates",
-        "text": "*_Dismiss"
+        "text": "Отклонить"
       }
     },
     "mailingListBonusNotificationItem": {
       "explanationWithBonus": "*_Subscribe to our announcement list and get <strong>%s bonus storage</strong> (1-2 emails per month).",
-      "submitButton": "*_Subscribe",
-      "dismissButton": "*_No thanks"
+      "submitButton": "Подписываться",
+      "dismissButton": "Спасибо, не надо"
     },
     "referralNotificationItem": {
       "paidUser": "*_Get up to 30 GB bonus with the",
       "unpaidUser": "*_Unlimited grains & up to 2 GB bonus with the",
       "link": "*_referral program »",
-      "dismissButton": "*_Dismiss"
+      "dismissButton": "Отклонить"
     },
     "adminNotificationItem": {
       "explanation": "*_You can help Sandstorm by sending us some anonymous usage stats. Click here for more info."
@@ -413,7 +413,7 @@
       "title": "*_<strong>__sender__</strong> in <strong>__grain__</strong>:",
       "dismissButton": {
         "hint": "*_Dismiss this notification",
-        "text": "*_Dismiss"
+        "text": "Отклонить"
       }
     }
   },
