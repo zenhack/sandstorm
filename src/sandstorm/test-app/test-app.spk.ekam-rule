@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+set -e
+
+echo findInput test-app
+read
+
+echo findInput test-app.capnp
+read pkgdefPath
+echo findInput test-app.key
+read keyPath
+echo findInput spk-standalone
+read spkCmdPath
+echo newOutput test-app.spk
+read pkgOutPath
+
+${spkCmdPath} \
+	pack \
+	-Itmp \
+	-Isrc \
+	-k${keyPath} \
+	-p${pkgdefPath}:pkgdef \
+	${pkgOutPath} > /dev/null

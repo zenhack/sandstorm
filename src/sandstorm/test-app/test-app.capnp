@@ -94,6 +94,7 @@ const pkgdef :Spk.PackageDefinition = (
   sourceMap = (
     searchPath = [
       ( packagePath = "test-app", sourcePath = "test-app" ),
+      ( sourcePath = "../../../tmp/sandstorm/test-app" ),
     ]
   ),
 
