@@ -2552,7 +2552,7 @@ public:
       UiSession::Client session =
         newUiSession(
             userInfo,
-            kj::str(sessionIdCounter++),
+            kj::mv(sessionId),
             sessionParams,
             params.getContext(),
             params.getTabId(),
