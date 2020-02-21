@@ -1221,7 +1221,7 @@ public:
 
     results.setRequestInfo(descriptor);
 
-    requests.insert({kj::StringPtr(id), capnp::clone(results.asReader())});
+    requests.insert({kj::str(id), capnp::clone(results.asReader())});
   }
 
   void insertOffer(
@@ -2346,7 +2346,7 @@ public:
     auto userPermissions = userInfo.getPermissions();
     return
       kj::heap<WebSessionImpl>(serverAddress, userInfo, sessionCtx,
-                               bridgeContext, kj::mv(sessionId),
+                               bridgeContext, kj::str(sessionId),
                                kj::encodeHex(tabId),
                                kj::heapString(sessionParams.getBasePath()),
                                kj::heapString(sessionParams.getUserAgent()),
@@ -2463,7 +2463,7 @@ public:
       UiSession::Client session =
         newUiSession(
             userInfo,
-            kj::mv(sessionId),
+            kj::str(sessionId),
             sessionParams,
             params.getContext(),
             params.getTabId(),
@@ -2488,7 +2488,7 @@ public:
     UiSession::Client session =
       newUiSession(
           userInfo,
-          kj::mv(sessionId),
+          kj::str(sessionId),
           sessionParams,
           params.getContext(),
           params.getTabId(),
