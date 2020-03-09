@@ -287,8 +287,7 @@ install script to not attempt to report installation problems to us (`REPORT=no`
 
 The next command runs the Sandstorm bundle stored in the volume, serving forever. The `tail -f`
 command is used to print out the Sandstorm log while Sandstorm runs. Sandstorm will be available at
-http://local.sandstorm.io:6080/ . `local.sandstorm.io` is a DNS alias for localhost, indicating that
-the service is running on the computer where you run Docker.
+http://localhost:6080/ .
 
 This process uses Sandstorm's install.sh to download Sandstorm, and Sandstorm is configured via
 `sandstorm.conf` within the container. To configure and manage the container, note the following.
@@ -297,7 +296,7 @@ This process uses Sandstorm's install.sh to download Sandstorm, and Sandstorm is
   inconsistent with the typical Docker approach of using Docker images to manage updates and
   versioning for application code.
 
-- The install script uses `local.sandstorm.io` and enables development accounts in the `-d` mode. To
+- The install script uses `localhost` and enables development accounts in the `-d` mode. To
   configure Sandstorm for production use, clear the Docker volume (or create a new one), then remove
   `-d` from the first `docker run` invocation so that the Sandstorm install script can ask you
   questions.
@@ -339,8 +338,7 @@ $ vagrant up
 ```
 
 In this configuration, Vagrant/VirtualBox manage TCP port forwarding, and Sandstorm is available at
-http://local.sandstorm.io:6080/ by default. `local.sandstorm.io` is a DNS alias for localhost,
-indicating that the service is only visible on the computer where you ran Vagrant.
+http://localhost:6080/ by default.
 
 We do recommend that you run Sandstorm on a native Linux system, but we understand that this isn't
 always an option. If you need further help making Sandstorm work with Vagrant or within

@@ -192,17 +192,7 @@ App is now available from Sandstorm server. Ctrl+C to disconnect.
 
 When we visit the Sandstorm server, we'll see the app available. Open up
 this URL in your web browser:
-[http://local.sandstorm.io:6090/](http://local.sandstorm.io:6090/)
-
-A note about `local.sandstorm.io`: This is the same as `localhost`,
-but in Sandstorm's security model, each session to the app uses a
-temporary subdomain of the main Sandstorm URL. This is an
-implemenation detail that your app mostly does not need to know about,
-but it does mean that the domain name running Sandstorm needs
-[wildcard DNS](../administering/wildcard.md). We created
-`local.sandstorm.io` as an alias for `localhost` and gave it wildcard
-DNS. You can rest assured that your interactions with
-`local.sandstorm.io` stay entirely on your computer.
+[http://localhost:6090/](http://localhost:6090/)
 
 Take a moment now to sign in. Choose **with a Dev account** and choose
 **Alice (admin)**. You will have to enter an email address; you can use
@@ -284,7 +274,7 @@ and change it to read:
 ```
 
 To refresh the information that shows up in
-[http://local.sandstorm.io:6090/](http://local.sandstorm.io:6090/),
+[http://localhost:6090/](http://localhost:6090/),
 find the terminal where you are running `vagrant-spk dev`. It should
 have this line at the end.
 

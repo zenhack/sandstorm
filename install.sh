@@ -723,7 +723,7 @@ to install without using root access. In that case, Sandstorm will operate OK bu
     if [ -n "${SUDO_USER:-}" ]; then
       echo "* Add you ($SUDO_USER) to the $DEFAULT_SERVER_USER group so you can read/write app data."
     fi
-    echo "* Expose the service only on localhost aka local.sandstorm.io, not the public Internet."
+    echo "* Expose the service only on localhost, not the public Internet."
     echo "* Enable 'dev accounts', for easy developer login."
     if [ "unknown" == "$INIT_SYSTEM" ]; then
       echo "*** WARNING: Could not detect how to run Sandstorm at startup on your system. ***"
@@ -750,10 +750,10 @@ to install without using root access. In that case, Sandstorm will operate OK bu
     # Bind to localhost, unless -e specified in argv.
     USE_EXTERNAL_INTERFACE="${USE_EXTERNAL_INTERFACE:-no}"
 
-    # Use local.sandstorm.io as hostname unless environment variable declared otherwise. This
+    # Use localhost as hostname unless environment variable declared otherwise. This
     # short-circuits the code elsewhere that uses the system hostname if USE_EXTERNAL_INTERFACE is
     # "yes".
-    SS_HOSTNAME="${SS_HOSTNAME:-local.sandstorm.io}"
+    SS_HOSTNAME="${SS_HOSTNAME:-localhost}"
 
     # Use 30025 as the default SMTP_LISTEN_PORT.
     SMTP_LISTEN_PORT="${DEFAULT_SMTP_PORT}"
@@ -964,12 +964,7 @@ configure_hostnames() {
     SS_HOSTNAME="${SS_HOSTNAME:-$(hostname -f 2>/dev/null || hostname)}"
   else
     BIND_IP=127.0.0.1
-    SS_HOSTNAME=local.sandstorm.io
-    if [ "yes" != "$USE_DEFAULTS" ] ; then
-      echo "Note: local.sandstorm.io maps to 127.0.0.1, i.e. your local machine."
-      echo "For reasons that will become clear in the next step, you should use this"
-      echo "instead of 'localhost'."
-    fi
+    SS_HOSTNAME=localhost
   fi
 
   # A typical server's DEFAULT_BASE_URL is its hostname plus port over HTTP. If the port is 80, then
@@ -1010,9 +1005,9 @@ configure_hostnames() {
   fi
 
   # If the BASE_URL looks like localhost, then we had better use a
-  # DEFAULT_WILDCARD of local.sandstorm.io so that wildcard DNS works.
+  # DEFAULT_WILDCARD of *.localhost so that wildcard DNS works.
   if [[ "$BASE_URL" =~ ^http://localhost(|:[0-9]*)(/.*)?$ ]]; then
-    DEFAULT_WILDCARD=*.local.sandstorm.io${BASH_REMATCH[1]}
+    DEFAULT_WILDCARD=*.localhost${BASH_REMATCH[1]}
   elif [[ "$BASE_URL" =~ ^[^:/]*://([^/]*)/?$ ]]; then
     DEFAULT_WILDCARD="${DEFAULT_WILDCARD:-*.${BASH_REMATCH[1]}}"
   else
@@ -1032,10 +1027,8 @@ configure_hostnames() {
       echo "\"*.foo.example.com\". You can also specify that hosts should have a special"
       echo "prefix, like \"ss-*.foo.example.com\". Note that if your server's main page"
       echo "is served over SSL, the wildcard address must support SSL as well, which"
-      echo "implies that you must have a wildcard certificate. For local-machine servers,"
-      echo "we have mapped *.local.sandstorm.io to 127.0.0.1 for your convenience, so you"
-      echo "can use \"*.local.sandstorm.io\" here. If you are serving off a non-standard"
-      echo "port, you must include it here as well."
+      echo "implies that you must have a wildcard certificate. If you are serving off"
+      echo "a non-standard port, you must include it here as well."
     fi
     WILDCARD_HOST=$(prompt "Wildcard host:" "$DEFAULT_WILDCARD")
 

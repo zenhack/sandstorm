@@ -154,16 +154,12 @@ and get your shell back. At this point, you can continue to the next step.
 Your system is now running a Sandstorm instance. You should visit it in your web browser now by
 opening this link.
 
-[http://local.sandstorm.io:6090/](http://local.sandstorm.io:6090/)
+[http://localhost:6090/](http://localhost:6090/)
 
 Some quick facts on how that works:
 
 - Sandstorm is running within a Linux system created with the help of vagrant-spk,
   vagrant, and VirtualBox.
-
-- local.sandstorm.io is a DNS alias that points to the same IP address as `localhost`.  We use
-  local.sandstorm.io instead of `localhost` because all subdomains of local.sandstorm.io also point
-  at the localhost IP address. You can read more about [wildcard DNS.](../administering/wildcard.md)
 
 - Sandstorm uses port 6080 by default. vagrant-spk uses port 6090 by default.
 
@@ -240,7 +236,7 @@ On the terminal, you will see a message like:
 App is now available from Sandstorm server. Ctrl+C to disconnect.
 ```
 
-Now you can visit the Sandstorm at http://local.sandstorm.io:6090/ and log in
+Now you can visit the Sandstorm at http://localhost:6090/ and log in
 as **Alice (admin)**. Your app name should appear in the list of apps.
 
 You can click **New showcase** and see the PHP code running.

@@ -9,8 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "debian/contrib-stretch64"
 
   # We forward port 6080, the Sandstorm web port, so that developers can
-  # visit their sandstorm app from their browser as local.sandstorm.io:6080
-  # (aka 127.0.0.1:6080).
+  # visit their sandstorm app from their browser as localhost:6080
   config.vm.network :forwarded_port, guest: 6080, host: 6080
 
   # Create a link-local private address, so that the host can
@@ -35,7 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     printf '\n- https://github.com/sandstorm-io/sandstorm/wiki/Using-the-Vagrantfile'
     printf '\n'
     printf '\nVisit it at:'
-    printf '\n  http://local.sandstorm.io:6080/'
+    printf '\n  http://localhost:6080/'
     printf '\n'
 EOF
 

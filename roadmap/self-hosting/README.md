@@ -11,7 +11,7 @@ The installation process for Sandstorm begins on the web, and is an interactive 
 Users may be directed to install Sandstorm from a variety of sources:
 - From the Sandstorm front page or other Sandstorm advertisement.
 - From an app page in the app store. In this case the user is interested in a specific app, and our install flow will keep track of this so that they can be prompted to install that app once Sandstorm is ready.
-- From the developer documentation, in which case the flow should direct the user to set up a localhost server in dev mode accessed via `local.sandstorm.io`. (In this case we skip suggesting managed hosting or sandcats.io, as they are inappropriate for development.)
+- From the developer documentation, in which case the flow should direct the user to set up a localhost server in dev mode. (In this case we skip suggesting managed hosting or sandcats.io, as they are inappropriate for development.)
 
 The first step of the install flow is to ask whether the user would prefer self-hosting or managed hosting. If they choose managed, they are directed to the [managed hosting](../managed-hosting) signup process.
 

@@ -24,7 +24,7 @@ $[veryslow]GPG signature is valid.
 $[veryslow]Sandstorm started.
 $[veryslow]Your server is coming online. Waiting up to 90 seconds...
 $[veryslow]Visit this link to start using it:
-  http://local.sandstorm.io:6080/
+  http://localhost:6080/
 To learn how to control the server, run:
   sandstorm help
 $[exitcode]0
