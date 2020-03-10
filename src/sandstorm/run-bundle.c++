@@ -66,6 +66,7 @@
 #include "backend.h"
 #include "backup.h"
 #include "gateway.h"
+#include "config.h"
 
 namespace sandstorm {
 
@@ -310,12 +311,6 @@ auto parser = p::sequence(delimited<' '>(assignment), p::discardWhitespace, p::e
 
 }  // namespace idParser
 
-struct UserIds {
-  uid_t uid = 0;
-  gid_t gid = 0;
-  kj::Array<gid_t> groups;
-};
-
 kj::Array<uint> parsePorts(kj::Maybe<uint> httpsPort, kj::StringPtr portList) {
   auto portsSplitOnComma = split(portList, ',');
   size_t numHttpPorts = portsSplitOnComma.size();
@@ -475,8 +470,6 @@ class RunBundleMain {
   // Main class for the Sandstorm bundle runner.  This is a convenience tool for running the
   // Sandstorm binary bundle, which is a packaged chroot environment containing everything needed
   // to run a Sandstorm server.  Just unpack and run!
-
-  struct Config;
 
 public:
   RunBundleMain(kj::ProcessContext& context): context(context) {
@@ -1271,29 +1264,6 @@ private:
 
   kj::Vector<kj::StringPtr> meteorArgs;
   // For dev-shell command.
-
-  struct Config {
-    kj::Maybe<uint> httpsPort;
-    kj::Array<uint> ports;
-    uint mongoPort = 3001;
-    UserIds uids;
-    kj::String bindIp = kj::str("127.0.0.1");
-    kj::String rootUrl = nullptr;
-    kj::String wildcardHost = nullptr;
-    kj::String ddpUrl = nullptr;
-    kj::String mailUrl = nullptr;
-    kj::String updateChannel = nullptr;
-    kj::String sandcatsHostname = nullptr;
-    bool allowDemoAccounts = false;
-    bool isTesting = false;
-    bool allowDevAccounts = false;
-    bool hideTroubleshooting = false;
-    uint smtpListenPort = 30025;
-    kj::Maybe<kj::String> privateKeyPassword = nullptr;
-    kj::Maybe<kj::String> termsPublicId = nullptr;
-    kj::Maybe<kj::String> stripeKey = nullptr;
-    kj::Maybe<kj::String> stripePublicKey = nullptr;
-  };
 
   kj::String updateFile;
 
@@ -3343,53 +3313,6 @@ private:
     FdBundle fakeBundle(nullptr);
     mongoCommand(config, fakeBundle, kj::str("db.devpackages.remove({})"));
   }
-
-  void mongoCommand(const Config& config, FdBundle& fdBundle,
-                    kj::StringPtr command, kj::StringPtr db = "meteor") {
-    char commandFile[] = "/tmp/mongo-command.XXXXXX";
-    int commandRawFd;
-    KJ_SYSCALL(commandRawFd = mkstemp(commandFile));
-    kj::AutoCloseFd commandFd(commandRawFd);
-    KJ_DEFER(unlink(commandFile));
-    if (runningAsRoot) {
-      KJ_SYSCALL(fchown(commandRawFd, -1, config.uids.gid));
-      KJ_SYSCALL(fchmod(commandRawFd, 0660));
-    }
-    kj::FdOutputStream(kj::mv(commandFd)).write(command.begin(), command.size());
-
-    Subprocess process([&]() -> int {
-      fdBundle.closeAll();
-
-      // Don't run as root.
-      dropPrivs(config.uids);
-
-      execMongoClient(config, {"--quiet"}, {commandFile}, db);
-      KJ_UNREACHABLE;
-    });
-    process.waitForSuccess();
-  }
-
-  [[noreturn]] void execMongoClient(const Config& config,
-        std::initializer_list<kj::StringPtr> optionArgs,
-        std::initializer_list<kj::StringPtr> fileArgs,
-        kj::StringPtr dbName = "meteor") {
-    auto db = kj::str("127.0.0.1:", config.mongoPort, "/", dbName);
-
-    kj::Vector<const char*> args;
-    args.add("/bin/mongo");
-
-    // If /var/mongo/passwd exists, we interpret it as containing the password for a Mongo user
-    // "sandstorm", and assume we are expected to log in as this user.
-    kj::String passwordArg;
-    if (access("/var/mongo/passwd", F_OK) == 0) {
-      passwordArg = kj::str("--password=", trim(readAll(raiiOpen("/var/mongo/passwd", O_RDONLY))));
-
-      args.add("-u");
-      args.add("sandstorm");
-      args.add(passwordArg.cStr());
-      args.add("--authenticationDatabase");
-      args.add("admin");
-    }
 
     for (auto& arg: optionArgs) {
       args.add(arg.cStr());
