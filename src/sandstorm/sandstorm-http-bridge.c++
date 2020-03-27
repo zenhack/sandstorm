@@ -2851,11 +2851,28 @@ public:
     KJ_SYSCALL(setenv("HTTP_PROXY", proxyEnv.cStr(), true));
     KJ_SYSCALL(setenv("no_proxy", "localhost,127.0.0.1", true));
 
+    // Export a Unix socket on which the application can connect and make calls directly to the
+    // Sandstorm API. We create and bind the socket before forking, so that it is guaranteed
+    // to already exist when the app starts executing.
+    int appApiFd;
+    {
+      const char *path = "/tmp/sandstorm-api";
+      unlink(path);  // Clear stale socket, if any.
+      KJ_SYSCALL(appApiFd = socket(AF_UNIX, SOCK_STREAM, 0));
+      struct sockaddr_un addr;
+      memset(&addr, 0, sizeof(struct sockaddr_un));
+      addr.sun_family = AF_UNIX;
+      strcpy(addr.sun_path, path);
+      KJ_SYSCALL(bind(appApiFd, (struct sockaddr *)&addr, sizeof addr));
+      KJ_SYSCALL(listen(appApiFd, SOMAXCONN));
+    }
+
     pid_t child;
     KJ_SYSCALL(child = fork());
     if (child == 0) {
       // We're in the child.
       close(3);  // Close Supervisor's Cap'n Proto socket to avoid confusion.
+      close(appApiFd); // ...and the listen socket for /tmp/sandstorm-api.
 
       // Clear signal mask and reset signal disposition.
       // TODO(cleanup): This is kind of dependent on implementation details of kj/async-unix.c++,
@@ -2937,20 +2954,17 @@ public:
           .castAs<SandstormApi<BridgeObjectId>>();
       apiPaf.fulfiller->fulfill(kj::cp(api));
 
-      // Export a Unix socket on which the application can connect and make calls directly to the
-      // Sandstorm API.
       SandstormHttpBridge::Client sandstormHttpBridge =
           kj::heap<SandstormHttpBridgeImpl>(kj::cp(api), bridgeContext);
       ErrorHandlerImpl errorHandler;
       kj::TaskSet tasks(errorHandler);
-      unlink("/tmp/sandstorm-api");  // Clear stale socket, if any.
-      auto acceptTask = ioContext.provider->getNetwork()
-          .parseAddress("unix:/tmp/sandstorm-api", 0)
-          .then([&, sandstormHttpBridge](kj::Own<kj::NetworkAddress>&& addr) mutable {
-        auto serverPort = addr->listen();
-        auto promise = acceptLoop(*serverPort, kj::mv(sandstormHttpBridge), tasks);
-        return promise.attach(kj::mv(serverPort));
-      });
+
+      // Actually start accepting connections for the api socket we bound before the
+      // fork().
+      auto serverPort = ioContext.lowLevelProvider->wrapListenSocketFd(appApiFd);
+      auto acceptTask =
+        acceptLoop(*serverPort, kj::mv(sandstormHttpBridge), tasks)
+        .attach(kj::mv(serverPort));
 
       // Export an HTTP proxy which the app can use to make HTTP API requests.
       kj::HttpHeaderTable::Builder headerTableBuilder;
