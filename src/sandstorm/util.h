@@ -524,6 +524,24 @@ OwnCapnp<capnp::FromReader<Reader>> newOwnCapnp(Reader value) {
   return OwnCapnp<capnp::FromReader<Reader>>(kj::mv(words));
 }
 
+template<typename Fn>
+class DropHandleCallback : public Handle::Server {
+  public:
+    DropHandleCallback(Fn&& f) : callback(kj::mv(f)) {}
+
+    inline ~DropHandleCallback() {
+      callback();
+    }
+  private:
+    Fn callback;
+};
+
+template<typename Fn>
+static inline
+Handle::Client dropCallback(Fn&& f) {
+  return Handle::Client(kj::heap<DropHandleCallback<Fn>>(kj::mv(f)));
+}
+
 }  // namespace sandstorm
 
 #endif // SANDSTORM_UTIL_H_

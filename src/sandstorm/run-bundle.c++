@@ -24,6 +24,7 @@
 #include <capnp/dynamic.h>
 #include <capnp/serialize.h>
 #include <capnp/compat/json.h>
+#include <sandstorm/control-socket.capnp.h>
 #include <sandstorm/package.capnp.h>
 #include <sandstorm/update-tool.capnp.h>
 #include <sodium/randombytes.h>
@@ -67,6 +68,7 @@
 #include "backup.h"
 #include "gateway.h"
 #include "config.h"
+#include "control-socket.h"
 
 namespace sandstorm {
 
@@ -1589,6 +1591,15 @@ private:
       return builder.finish();
     }
 
+    kj::Own<ShellFDs::Reader> consumeDevShellFds() {
+      capnp::MallocMessageBuilder msg;
+      auto shellFds = msg.initRoot<ShellFDs>();
+      shellFds.setAcceptHttp(exportFd(kj::mv(links[SHELL_HTTP].server)));
+      shellFds.setConnectBackend(exportFd(kj::mv(links[SHELL_BACKEND].client)));
+      shellFds.setAcceptSmtp(exportFd(kj::mv(links[SHELL_SMTP].server)));
+      return capnp::clone(shellFds.asReader());
+    }
+
     kj::Own<kj::ConnectionReceiver> consume(uint port, kj::LowLevelAsyncIoProvider& provider) {
       auto iter = ports.find(port);
       KJ_REQUIRE(iter != ports.end());
@@ -1870,9 +1881,9 @@ private:
         if (signal(SIGALRM, SIG_DFL) == SIG_ERR) {
           KJ_FAIL_SYSCALL("signal(SIGALRM, SIG_DFL)", errno);
         }
-        auto shellInherited = fdBundle.consumeShellInherited();
+        auto shellInherited = fdBundle.consumeDevShellFds();
         fdBundle.closeAll();
-        runDevDaemon(config, kj::mv(shellInherited), serverMonitorPid);
+        runControlSocketDaemon(kj::mv(shellInherited), serverMonitorPid);
         KJ_UNREACHABLE;
       }
     } else {
@@ -2763,6 +2774,48 @@ private:
     KJ_SYSCALL(connect(sock, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)));
 
     return kj::mv(sock);
+  }
+
+  void runControlSocketDaemon(
+      kj::Own<ShellFDs::Reader> shellFds,
+      pid_t serverMonitorPid) {
+    //kj::TaskSet taskSet([](kj::Exception&& e) {
+    //});
+    Controller::Client controller(
+        kj::heap<ControllerImpl>(serverMonitorPid, kj::mv(shellFds))
+    );
+    auto context = kj::setupAsyncIo();
+    context.provider->getNetwork()
+      .parseAddress(kj::str("unix:", Controller::SOCKET_PATH))
+      .then([this, &controller](auto addr) -> auto {
+        return this->controlSocketAcceptLoop(
+            //taskSet,
+            addr->listen(),
+            controller);
+      })
+      .wait(context.waitScope);
+    //taskSet.wait(context.waitScope);
+  }
+
+  kj::Promise<void> controlSocketAcceptLoop(
+      //kj::TaskSet& taskSet,
+      kj::Own<kj::ConnectionReceiver>&& sock,
+      Controller::Client& controller) {
+    return sock->accept()
+      .then([this, &sock, &controller](auto conn) -> kj::Promise<void> {
+        capnp::MallocMessageBuilder message;
+        auto vatId = message.initRoot<capnp::rpc::twoparty::VatId>();
+        vatId.setSide(capnp::rpc::twoparty::Side::CLIENT);
+
+        auto network = kj::heap<capnp::TwoPartyVatNetwork>(
+            *conn,
+            capnp::rpc::twoparty::Side::SERVER);
+        auto rpcSystem = capnp::makeRpcServer(*network, controller);
+        network->onDisconnect().attach(kj::mv(rpcSystem)).detach([](kj::Exception&&) {
+            return kj::READY_NOW;
+        }); // TODO: taskSet
+        return controlSocketAcceptLoop(/* taskSet, */ kj::mv(sock), controller);
+      });
   }
 
   [[noreturn]] void runDevDaemon(const Config& config, kj::Array<kj::AutoCloseFd> shellInherited,
