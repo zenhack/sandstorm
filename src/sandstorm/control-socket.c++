@@ -36,10 +36,10 @@ namespace sandstorm {
     // First make sure the shell is not running. Send the magic signal to the server monitor
     // to request this, and wait for the response signal SIGUSR1.
 
-    // Block SIGUSR1 to avoid race condition.
+    // Block SIGUSR2 to avoid race condition. SIGUSR1 is reserved by the event loop.
     sigset_t sigmask;
     KJ_SYSCALL(sigemptyset(&sigmask));
-    KJ_SYSCALL(sigaddset(&sigmask, SIGUSR1));
+    KJ_SYSCALL(sigaddset(&sigmask, SIGUSR2));
     KJ_SYSCALL(sigprocmask(SIG_BLOCK, &sigmask, nullptr));
 
     // Send signal to server monitor to request shell shutdown.
@@ -51,7 +51,7 @@ namespace sandstorm {
     // Wait for response.
     int signo;
     KJ_SYSCALL(sigwait(&sigmask, &signo));
-    KJ_ASSERT(signo == SIGUSR1);
+    KJ_ASSERT(signo == SIGUSR2);
 
     auto results = context.getResults();
     results.setShellFds(*shellFds);

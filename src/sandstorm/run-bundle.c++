@@ -1041,9 +1041,9 @@ public:
       context.exitError("Sandstorm is not running.");
     }
 
-    // Connect to the devmode socket. The server daemon listens on this socket for commands.
-    // See `runDevDaemon()`.
-    auto sock = connectToDevDaemon();
+    auto aioContext = kj::setupAsyncIo();
+
+    auto controlSockFd = connectToControlSock();
 
     // Switch back to the original directory before we mess with file descriptors.
     KJ_SYSCALL(fchdir(originalDir));
@@ -1054,28 +1054,44 @@ public:
     //   need to make sure it has a nice, high number so that we can dup2() the shell-inherited
     //   FDs into their designated slots below.
     int sockFd;
-    KJ_SYSCALL(sockFd = fcntl(sock, F_DUPFD, 64));
-    sock = kj::AutoCloseFd(sockFd);
+    KJ_SYSCALL(sockFd = fcntl(controlSockFd, F_DUPFD, 64));
+    auto capStream = aioContext.lowLevelProvider->wrapUnixSocketFd(sockFd);
+    auto sock = kj::AutoCloseFd(sockFd);
+    controlSockFd = nullptr;
 
-    // Send the command code.
-    kj::FdOutputStream(sock.get()).write(&DEVMODE_COMMAND_SHELL, 1);
+    capnp::TwoPartyVatNetwork network(
+        *capStream,
+        3, // max 3 fds passed per message; enough to cover ShellFDs and no more.
+        capnp::rpc::twoparty::Side::CLIENT);
 
-    // Read how many FDs to expect.
-    kj::byte count;
-    kj::FdInputStream(sock.get()).read(&count, 1);
+    auto rpcSystem = capnp::makeRpcClient(network);
+    capnp::MallocMessageBuilder message;
+    auto vatId = message.initRoot<capnp::rpc::twoparty::VatId>();
+    vatId.setSide(capnp::rpc::twoparty::Side::SERVER);
 
-    // Expect to receive that many FDs and move them to their inherited slots.
+    auto controller = rpcSystem.bootstrap(vatId).castAs<Controller>();
+    auto results = controller.devShellRequest().send().wait(aioContext.waitScope);
+
+    // Move FDs to their inherited slots.
     // Hack: Meteor's intermediate process appears to replace FD 3. So, we place our FDs way up
     //   at 65+.
-    for (auto i: kj::zeroTo(count)) {
-      auto fd = receiveFd(sock);
-      int target = 65 + i;
-      if (fd.get() == target) {
-        KJ_SYSCALL(ioctl(fd.release(), FIONCLEX));
+    auto moveTo = [&aioContext](int target, kj::Promise<kj::Maybe<int>>&& fdp) {
+      KJ_IF_MAYBE(fd, fdp.wait(aioContext.waitScope)) {
+        if(*fd == target) {
+          KJ_SYSCALL(ioctl(*fd, FIONCLEX));
+        } else {
+          kj::AutoCloseFd cfd(*fd);
+          KJ_SYSCALL(dup2(cfd, target));
+        }
       } else {
-        KJ_SYSCALL(dup2(fd, target));
+        KJ_FAIL_ASSERT("Shell FD not received from sandstorm.");
       }
-    }
+    };
+    auto shellFds = results.getShellFds();
+    int firstFd = 65;
+    moveTo(firstFd+0, shellFds.getAcceptHttp().getFd());
+    moveTo(firstFd+1, shellFds.getConnectBackend().getFd());
+    moveTo(firstFd+2, shellFds.getAcceptSmtp().getFd());
 
     // Meteor annoyingly wants the settings to be in a file, so we create an unnamed temporary
     // file and open it with /proc/self/fd.
@@ -1883,7 +1899,11 @@ private:
         }
         auto shellInherited = fdBundle.consumeDevShellFds();
         fdBundle.closeAll();
-        runControlSocketDaemon(kj::mv(shellInherited), serverMonitorPid);
+        runControlSocketDaemon(
+            runningAsRoot,
+            config,
+            kj::mv(shellInherited),
+            serverMonitorPid);
         KJ_UNREACHABLE;
       }
     } else {
@@ -1981,7 +2001,7 @@ private:
           nodePid = 0;
 
           // Let the sender know that shutdown has completed.
-          KJ_SYSCALL(kill(siginfo.ssi_pid, SIGUSR1));
+          KJ_SYSCALL(kill(siginfo.ssi_pid, SIGUSR2));
         }
       } else {
         // SIGTERM or something.
@@ -2762,6 +2782,23 @@ private:
     KJ_SYSCALL(chown(path.cStr(), owner, group));
   }
 
+  kj::AutoCloseFd connectToControlSock() {
+    int sock_;
+    KJ_SYSCALL(sock_ = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0));
+    auto sock = kj::AutoCloseFd(sock_);
+
+    struct sockaddr_un addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
+    {
+      auto path = kj::str("..", Controller::SOCKET_PATH);
+      strcpy(addr.sun_path, path.cStr());
+    }
+    KJ_SYSCALL(connect(sock, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)));
+
+    return kj::mv(sock);
+  }
+
   kj::AutoCloseFd connectToDevDaemon() {
     int sock_;
     KJ_SYSCALL(sock_ = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0));
@@ -2776,7 +2813,9 @@ private:
     return kj::mv(sock);
   }
 
-  void runControlSocketDaemon(
+  [[noreturn]] void runControlSocketDaemon(
+      bool runningAsRoot,
+      const Config& config,
       kj::Own<ShellFDs::Reader> shellFds,
       pid_t serverMonitorPid) {
     //kj::TaskSet taskSet([](kj::Exception&& e) {
@@ -2784,25 +2823,35 @@ private:
     Controller::Client controller(
         kj::heap<ControllerImpl>(serverMonitorPid, kj::mv(shellFds))
     );
+
+    // Create the control socket.
+    int sock_;
+    KJ_SYSCALL(sock_ = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0));
+    auto sock = kj::AutoCloseFd(sock_);
+
+    struct sockaddr_un addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
+    strcpy(addr.sun_path, Controller::SOCKET_PATH->cStr());
+    unlink(addr.sun_path); // Delete the old socket, if it exists.
+    KJ_SYSCALL(bind(sock, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)));
+    KJ_SYSCALL(listen(sock, 2));
+
+    // Ensure that the group can connect to the socket.
+    if (runningAsRoot) { KJ_SYSCALL(chown(addr.sun_path, 0, config.uids.gid)); }
+    KJ_SYSCALL(chmod(addr.sun_path, 0770));
+
     auto context = kj::setupAsyncIo();
-    context.provider->getNetwork()
-      .parseAddress(kj::str("unix:", Controller::SOCKET_PATH))
-      .then([this, &controller](auto addr) -> auto {
-        return this->controlSocketAcceptLoop(
-            //taskSet,
-            addr->listen(),
-            controller);
-      })
-      .wait(context.waitScope);
-    //taskSet.wait(context.waitScope);
+    auto receiver = context.lowLevelProvider->wrapListenSocketFd(sock);
+    controlSocketAcceptLoop(*receiver, controller).wait(context.waitScope);
+    KJ_UNREACHABLE;
   }
 
   kj::Promise<void> controlSocketAcceptLoop(
       //kj::TaskSet& taskSet,
-      kj::Own<kj::ConnectionReceiver>&& sock,
+      kj::ConnectionReceiver& sock,
       Controller::Client& controller) {
-    return sock->accept()
-      .then([this, &sock, &controller](auto conn) -> kj::Promise<void> {
+    return sock.accept().then([&](auto conn) -> kj::Promise<void> {
         capnp::MallocMessageBuilder message;
         auto vatId = message.initRoot<capnp::rpc::twoparty::VatId>();
         vatId.setSide(capnp::rpc::twoparty::Side::CLIENT);
@@ -2814,7 +2863,7 @@ private:
         network->onDisconnect().attach(kj::mv(rpcSystem)).detach([](kj::Exception&&) {
             return kj::READY_NOW;
         }); // TODO: taskSet
-        return controlSocketAcceptLoop(/* taskSet, */ kj::mv(sock), controller);
+        return controlSocketAcceptLoop(sock, controller);
       });
   }
 
