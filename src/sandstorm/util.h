@@ -525,7 +525,7 @@ OwnCapnp<capnp::FromReader<Reader>> newOwnCapnp(Reader value) {
 }
 
 template<typename Fn>
-class DropHandleCallback : public Handle::Server {
+class DropHandleCallback final: public Handle::Server {
   public:
     DropHandleCallback(Fn&& f) : callback(kj::mv(f)) {}
 

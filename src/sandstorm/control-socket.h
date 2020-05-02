@@ -7,7 +7,7 @@
 namespace sandstorm {
   FileDescriptor::Client exportFd(kj::AutoCloseFd&& fd);
 
-  class ControllerImpl : public Controller::Server {
+  class ControllerImpl final: public Controller::Server {
     public:
       ControllerImpl(
           pid_t serverMonitorPid,

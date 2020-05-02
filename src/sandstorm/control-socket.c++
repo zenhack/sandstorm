@@ -5,7 +5,7 @@
 #include "util.h"
 
 namespace sandstorm {
-  class FdWrapper : public FileDescriptor::Server {
+  class FdWrapper final: public FileDescriptor::Server {
     public:
       FdWrapper(kj::AutoCloseFd&& fd): fd(kj::mv(fd)) {}
       FdWrapper(int fd): fd(fd) {}
