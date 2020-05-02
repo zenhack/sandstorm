@@ -1075,8 +1075,8 @@ public:
     // Move FDs to their inherited slots.
     // Hack: Meteor's intermediate process appears to replace FD 3. So, we place our FDs way up
     //   at 65+.
-    auto moveTo = [&aioContext](int target, kj::Promise<kj::Maybe<int>>&& fdp) {
-      KJ_IF_MAYBE(fd, fdp.wait(aioContext.waitScope)) {
+    auto moveTo = [&aioContext](int target, FileDescriptor::Client&& fdc) {
+      KJ_IF_MAYBE(fd, fdc.getFd().wait(aioContext.waitScope)) {
         if(*fd == target) {
           KJ_SYSCALL(ioctl(*fd, FIONCLEX));
         } else {
@@ -1089,9 +1089,9 @@ public:
     };
     auto shellFds = results.getShellFds();
     int firstFd = 65;
-    moveTo(firstFd+0, shellFds.getAcceptHttp().getFd());
-    moveTo(firstFd+1, shellFds.getConnectBackend().getFd());
-    moveTo(firstFd+2, shellFds.getAcceptSmtp().getFd());
+    moveTo(firstFd+0, shellFds.getAcceptHttp());
+    moveTo(firstFd+1, shellFds.getConnectBackend());
+    moveTo(firstFd+2, shellFds.getAcceptSmtp());
 
     // Meteor annoyingly wants the settings to be in a file, so we create an unnamed temporary
     // file and open it with /proc/self/fd.
