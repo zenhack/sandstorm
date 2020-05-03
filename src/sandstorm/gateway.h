@@ -171,6 +171,11 @@ private:
 
   kj::String unknownForeignHostnameError(kj::StringPtr host);
 
+  void setWebSessionParams(
+		  kj::StringPtr basePath,
+		  WebSession::Params::Builder&,
+		  const kj::HttpHeaders& headers);
+
   void taskFailed(kj::Exception&& exception) override;
 };
 

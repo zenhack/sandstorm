@@ -26,6 +26,7 @@ using GrainInfo = import "grain.capnp".GrainInfo;
 
 using WebSession = import "web-session.capnp".WebSession;
 using ApiSession = import "api-session.capnp".ApiSession;
+using PublicWebView = import "public-domain.capnp".PublicWebView;
 
 interface Backend {
   # Interface that thet Sandstorm front-end uses to talk to the "back end", i.e. the container
@@ -186,6 +187,9 @@ interface GatewayRouter {
 
       standalone @2 :Void;
       # It's a standalone host. HTTP requests should be routed directly to Node business logic.
+
+      publicWebView @4 :PublicWebView;
+      # It's a public web view. Use the interface to handle traffic.
     }
 
     ttlSeconds @3 :UInt32;

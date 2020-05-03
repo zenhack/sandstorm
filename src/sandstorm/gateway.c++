@@ -411,6 +411,27 @@ kj::String WildcardMatcher::makeHost(kj::StringPtr hostId) {
   return kj::str(prefix, hostId, suffix);
 }
 
+static kj::String makeBasePath(kj::Url& baseUrl, const kj::HttpHeaders& headers) {
+    return kj::str(baseUrl.scheme, "://",
+        KJ_ASSERT_NONNULL(headers.get(kj::HttpHeaderId::HOST)));
+}
+
+void GatewayService::setWebSessionParams(
+    kj::StringPtr basePath,
+    WebSession::Params::Builder& params,
+    const kj::HttpHeaders& headers
+) {
+    params.setBasePath(basePath);
+    params.setUserAgent(headers.get(tables.hUserAgent).orDefault("UnknownAgent/0.0"));
+
+    KJ_IF_MAYBE(languages, headers.get(tables.hAcceptLanguage)) {
+      auto langs = KJ_MAP(lang, split(*languages, ',')) { return trim(lang); };
+      params.setAcceptableLanguages(KJ_MAP(l, langs) -> capnp::Text::Reader { return l; });
+    } else {
+      params.setAcceptableLanguages({"en-US", "en"});
+    }
+}
+
 kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders& headers) {
   kj::Vector<kj::String> forwardedCookies;
   kj::String sessionId;
@@ -441,18 +462,8 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
   if (iter == uiHosts.end()) {
     capnp::MallocMessageBuilder requestMessage(128);
     auto params = requestMessage.getRoot<WebSession::Params>();
-
-    auto basePath = kj::str(baseUrl.scheme, "://",
-        KJ_ASSERT_NONNULL(headers.get(kj::HttpHeaderId::HOST)));
-    params.setBasePath(basePath);
-    params.setUserAgent(headers.get(tables.hUserAgent).orDefault("UnknownAgent/0.0"));
-
-    KJ_IF_MAYBE(languages, headers.get(tables.hAcceptLanguage)) {
-      auto langs = KJ_MAP(lang, split(*languages, ',')) { return trim(lang); };
-      params.setAcceptableLanguages(KJ_MAP(l, langs) -> capnp::Text::Reader { return l; });
-    } else {
-      params.setAcceptableLanguages({"en-US", "en"});
-    }
+    auto basePath = makeBasePath(baseUrl, headers);
+    setWebSessionParams(basePath, params, headers);
 
     auto ownParams = newOwnCapnp(params.asReader());
 
@@ -826,6 +837,29 @@ kj::Promise<void> GatewayService::handleForeignHostname(kj::StringPtr host,
       case GatewayRouter::ForeignHostnameInfo::STANDALONE:
         // Serve Meteor shell app on standalone host.
         return shellHttp->request(method, url, headers, requestBody, response);
+
+      case GatewayRouter::ForeignHostnameInfo::PUBLIC_WEB_VIEW: {
+        // TODO(perf): cache the web view or web session or something.
+        auto req = entry.info.getPublicWebView().newWebSessionRequest();
+        auto params = req.getParams();
+        setWebSessionParams(makeBasePath(baseUrl, headers), params, headers);
+        auto session = req.send().getSession();
+        WebSessionBridge::Options options;
+
+        options.allowCookies = false;
+        options.isHttps = baseUrl.scheme == "https";
+        options.isApi = true;
+
+        auto bridge = kj::refcounted<WebSessionBridge>(
+          timer,
+          session,
+          nullptr,
+          tables.bridgeTables,
+          options
+        );
+        auto promise = bridge->request(method, url, headers, requestBody, response);
+        return promise.attach(kj::mv(bridge));
+      }
     }
     KJ_UNREACHABLE;
   };
