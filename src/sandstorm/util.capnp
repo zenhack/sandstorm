@@ -148,6 +148,18 @@ interface Blob @0xe53527a75d90198f {
 
 interface Assignable(T) {
   # An "assignable" -- a mutable memory cell. Supports subscribing to updates.
+  #
+  # When requesting or offering Assignables, Getters, or Setters via the powerbox, the powerbox
+  # tag's "value" should be another `Tag` describing `T`. So for example, to request an
+  # `Assignable(Foo).Getter`, you would provide a powerbox tag like:
+  #
+  # (
+  #   id = <type id of Getter>,
+  #   value = (
+  #     id = <type id of Foo>,
+  #     value = <tag value for Foo>,
+  #   ),
+  # )
 
   get @0 () -> (value :T, setter :Setter);
   # The returned setter functions the same as you'd get from `asSetter()` except that it will
