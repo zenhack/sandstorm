@@ -697,7 +697,7 @@ const backendAddress = { capabilityStreamFd: parseInt(process.env.SANDSTORM_BACK
 let sandstormBackendConnection = Capnp.connect(backendAddress, sandstormCoreFactory);
 let sandstormBackend = sandstormBackendConnection.restore(null, Backend);
 
-globalBackend = new SandstormBackend(globalDb, sandstormBackend);
+export const globalBackend = new SandstormBackend(globalDb, sandstormBackend);
 globalBackend._backendConnection = sandstormBackendConnection;  // ... don't GC this, please.
 Meteor.onConnection((connection) => {
   connection.sandstormBackend = globalBackend;

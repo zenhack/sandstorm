@@ -16,6 +16,7 @@
 
 import { Meteor } from "meteor/meteor";
 import { globalDb } from "/imports/db-deprecated.js";
+import { globalBackend } from "/imports/server/core.js";
 import { runDueJobs } from '/imports/server/scheduled-job.js';
 import { SandstormAutoupdateApps } from "/imports/sandstorm-autoupdate-apps/autoupdate-apps.js";
 import { isTesting } from "/imports/shared/testing.js";

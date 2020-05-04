@@ -27,6 +27,7 @@ import Future from "fibers/future";
 import Capnp from "/imports/server/capnp.js";
 import { SandstormDb } from "/imports/sandstorm-db/db.js";
 import { globalDb } from "/imports/db-deprecated.js";
+import { globalBackend } from "/imports/server/core.js";
 
 const GrainInfo = Capnp.importSystem("sandstorm/grain.capnp").GrainInfo;
 

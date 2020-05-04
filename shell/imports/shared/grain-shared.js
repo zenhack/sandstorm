@@ -109,6 +109,7 @@ Meteor.methods({
       if (this.isSimulation) {
         numDeleted = globalDb.collections.grains.remove(grainsQuery);
       } else {
+        import { globalBackend } from "/imports/server/core.js";
         numDeleted = globalDb.deleteGrains(grainsQuery, globalBackend,
                                            isDemoUser() ? "demoGrain" : "grain");
       }
