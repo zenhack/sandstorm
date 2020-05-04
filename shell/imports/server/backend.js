@@ -144,7 +144,7 @@ class SandstormBackend {
     // started. Returns a promise for an object containing two fields: `owner` (the ID of the owning
     // user) and `supervisor` (the supervisor capability).
 
-    if (isUserExcessivelyOverQuota(Meteor.users.findOne(ownerId))) {
+    if (globalDb.isUserExcessivelyOverQuota(Meteor.users.findOne(ownerId))) {
       throw new Meteor.Error("quota-exhausted",
                              ("Cannot start grain because owner's storage is exhausted.\n" +
                               "Please ask them to upgrade."));

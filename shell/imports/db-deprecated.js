@@ -66,7 +66,6 @@ Misc = globalDb.collections.misc;
 Settings = globalDb.collections.settings;
 
 currentUserGrains = globalDb.currentUserGrains.bind(globalDb);
-isUserExcessivelyOverQuota = globalDb.isUserExcessivelyOverQuota.bind(globalDb);
 isAdmin = globalDb.isAdmin.bind(globalDb);
 isAdminById = globalDb.isAdminById.bind(globalDb);
 findAdminUserForToken = globalDb.findAdminUserForToken.bind(globalDb);
