@@ -476,6 +476,8 @@ const ApiTokens = new Mongo.Collection("apiTokens", collectionOptions);
 //                   part and encrypt it separately?
 //       scheduledJob:
 //           id: _id in the ScheduledJobs table
+//       publicWebViewSetter: A setter for an entry in the `PublicWebViews` collection.
+//           id: _id in the `PublicWebViews` collection.
 //   parentToken: If present, then this token represents exactly the capability represented by
 //              the ApiToken with _id = parentToken, except possibly (if it is a UiView) attenuated
 //              by `roleAssignment` (if present). To facilitate permissions computations, if the
@@ -919,6 +921,18 @@ const OutgoingTransfers = new Mongo.Collection("outgoingTransfers", collectionOp
 
 OutgoingTransfers.ensureIndexOnServer("userId", { sparse: 1 });
 
+const PublicWebViews = new Mongo.Collection("publicWebViews", collectionOptions);
+// A public web view is a human-friendly domain name that should be served handled
+// directly by some capability (currently always provided by a grain, but in the
+// future we could loosen this). Fields:
+//
+// _id:      The ID part of a wildcard host. i.e. if `wildcardHost` is xx-*.example.com,
+//           Then the `_id` for xx-mysite.example.com is `mysite`.
+// grainId:  The grain servicing this domain.
+// objectId: JSON-encoded SupervisorObjectId (defined in `supervisor.capnp) for the
+//           `PublicWebView` object (defined in `public-domains.capnp) that will
+//           handle this domain.
+
 if (Meteor.isServer) {
   Meteor.publish("credentials", function () {
     // Data needed for isSignedUp() and isAdmin() to work.
@@ -1099,57 +1113,71 @@ function makeApiHost(token) {
   return makeWildcardHost(apiHostIdForToken(token));
 }
 
-function SandstormDb(quotaManager) {
-  // quotaManager is an object with the following method:
-  //   updateUserQuota: It is provided two arguments
-  //     db: This SandstormDb object
-  //     user: A collections.users account object
-  //   and returns a quota object:
-  //     storage: A number (can be Infinity)
-  //     compute: A number (can be Infinity)
-  //     grains: A number (can be Infinity)
+class SandstormDb {
+  constructor(quotaManager) {
+    // quotaManager is an object with the following method:
+    //   updateUserQuota: It is provided two arguments
+    //     db: This SandstormDb object
+    //     user: A collections.users account object
+    //   and returns a quota object:
+    //     storage: A number (can be Infinity)
+    //     compute: A number (can be Infinity)
+    //     grains: A number (can be Infinity)
 
-  this.quotaManager = quotaManager;
-  this.collections = {
-    // Direct access to underlying collections. DEPRECATED, but better than accessing the top-level
-    // collection globals directly.
-    //
-    // TODO(cleanup): Over time, we will provide methods covering each supported query and remove
-    //   direct access to the collections.
-    users: Meteor.users,
+    this.quotaManager = quotaManager;
+    this.collections = {
+      // Direct access to underlying collections. DEPRECATED, but better than accessing the top-level
+      // collection globals directly.
+      //
+      // TODO(cleanup): Over time, we will provide methods covering each supported query and remove
+      //   direct access to the collections.
+      users: Meteor.users,
 
-    packages: Packages,
-    devPackages: DevPackages,
-    userActions: UserActions,
-    grains: Grains,
-    roleAssignments: RoleAssignments, // Deprecated, only used by the migration that eliminated it.
-    contacts: Contacts,
-    sessions: Sessions,
-    signupKeys: SignupKeys,
-    activityStats: ActivityStats,
-    deleteStats: DeleteStats,
-    fileTokens: FileTokens,
-    spkTokens: SpkTokens,
-    apiTokens: ApiTokens,
-    apiHosts: ApiHosts,
-    notifications: Notifications,
-    activitySubscriptions: ActivitySubscriptions,
-    statsTokens: StatsTokens,
-    misc: Misc,
-    settings: Settings,
-    migrations: Migrations,
-    staticAssets: StaticAssets,
-    assetUploadTokens: AssetUploadTokens,
-    plans: Plans,
-    appIndex: AppIndex,
-    keybaseProfiles: KeybaseProfiles,
-    setupSession: SetupSession,
-    desktopNotifications: DesktopNotifications,
-    standaloneDomains: StandaloneDomains,
-    scheduledJobs: ScheduledJobs,
-    incomingTransfers: IncomingTransfers,
-    outgoingTransfers: OutgoingTransfers,
-  };
+      packages: Packages,
+      devPackages: DevPackages,
+      userActions: UserActions,
+      grains: Grains,
+      roleAssignments: RoleAssignments, // Deprecated, only used by the migration that eliminated it.
+      contacts: Contacts,
+      sessions: Sessions,
+      signupKeys: SignupKeys,
+      activityStats: ActivityStats,
+      deleteStats: DeleteStats,
+      fileTokens: FileTokens,
+      spkTokens: SpkTokens,
+      apiTokens: ApiTokens,
+      apiHosts: ApiHosts,
+      notifications: Notifications,
+      activitySubscriptions: ActivitySubscriptions,
+      statsTokens: StatsTokens,
+      misc: Misc,
+      settings: Settings,
+      migrations: Migrations,
+      staticAssets: StaticAssets,
+      assetUploadTokens: AssetUploadTokens,
+      plans: Plans,
+      appIndex: AppIndex,
+      keybaseProfiles: KeybaseProfiles,
+      setupSession: SetupSession,
+      desktopNotifications: DesktopNotifications,
+      standaloneDomains: StandaloneDomains,
+      scheduledJobs: ScheduledJobs,
+      incomingTransfers: IncomingTransfers,
+      outgoingTransfers: OutgoingTransfers,
+    };
+  }
+
+  setPublicWebView(domain, grainId, objectId) {
+    this.collections.publicWebViews.upsert({
+      _id: domain,
+      grainId,
+      objectId,
+    })
+  }
+
+  clearPublicWebView(domain) {
+    this.collections.publicWebViews.delete({ _id: domain });
+  }
 }
 
 // TODO(cleanup): These methods should not be defined freestanding and should use collection
