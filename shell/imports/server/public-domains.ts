@@ -20,6 +20,18 @@ import { SystemPersistent } from "/imports/server/capnp/supervisor.js";
 import { PublicWebView } from "/imports/server/capnp/public-domains.js";
 import { PublicWebViewSetter } from "/imports/server/capnp/public-domains-internal.js";
 
+import { FrontendRefCallback } from "/imports/server/frontend-ref-types.ts";
+
+// Temporary type definitions, until we can get proper declarations in
+// place somehow.
+type SystemPersistent = any;
+type PublicWebView = any;
+type PublicWebViewSetter = any;
+interface SaveResults {
+  sturdyRef: Buffer;
+}
+// End temporary type definitions.
+
 class PublicWebViewSetterImpl extends PublicWebViewSetter {
   db: SandstormDb
   domain: string
@@ -37,9 +49,26 @@ class PublicWebViewSetterImpl extends PublicWebViewSetter {
       this.db.clearPublicWebView(this.domain);
       return Promise.resolve();
     }
-    return value.castAs(SystemPersistent).save({ frontend: null }).then((result) => {
-      const sturdyRef: Buffer = result.sturdyRef;
-      this.db.setPublicWebView(this.domain, this.grainId, sturdyRef);
+    return value.castAs(SystemPersistent).save({ frontend: null }).then((result: SaveResults) => {
+      this.db.setPublicWebView(this.domain, this.grainId, result.sturdyRef);
     })
+  }
+}
+
+export const hook: FrontendRefCallback<string> = {
+  frontendRefField: "publicWebViewSetter",
+  typeId: PublicWebView.typeId,
+
+  restore(db: SandstormDb, saveTemplate: any, value: string): any {
+    // TODO: think about race conditions. I wish we had transactions.
+    const domain = value;
+    const publicWebView = db.getPublicWebViewFor(domain);
+    let grainId;
+    if(publicWebView === null) {
+      grainId = null;
+    } else {
+      grainId = publicWebView.grainId;
+    }
+    return new Capnp.Capability(new PublicWebViewSetterImpl(db, domain, grainId));
   }
 }

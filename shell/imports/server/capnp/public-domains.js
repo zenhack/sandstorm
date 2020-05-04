@@ -1,2 +1,4 @@
 import Capnp from "/imports/server/capnp.js";
-export default Capnp.importSystem("sandstorm/public-domains.capnp");
+const PublicDomains = Capnp.importSystem("sandstorm/public-domains.capnp");
+export const PublicWebView = PublicDomains.PublicWebView;
+export default PublicDomains;
