@@ -63,7 +63,7 @@ Meteor.methods({
   },
 
   newUploadToken: function () {
-    if (!isSignedUp()) {
+    if (!globalDb.isSignedUp()) {
       throw new Meteor.Error(403, "Unauthorized", "Only invited users can upload apps.");
     }
 
@@ -96,7 +96,7 @@ Meteor.methods({
       } else { // jscs:ignore disallowEmptyBlocks
         throw new Meteor.Error(403, "You must be logged in to install packages.");
       }
-    } else if (!isSignedUpOrDemo()) {
+    } else if (!globalDb.isSignedUpOrDemo()) {
       throw new Meteor.Error(403,
           "This Sandstorm server requires you to get an invite before installing apps.");
     }

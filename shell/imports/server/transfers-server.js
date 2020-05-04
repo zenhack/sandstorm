@@ -55,7 +55,7 @@ Meteor.publish("transfers", function () {
 Meteor.methods({
   newTransfer(destination) {
     check(destination, String);
-    if (!isSignedUp()) {
+    if (!globalDb.isSignedUp()) {
       throw new Meteor.Error(403, "Must be logged in to start transfers.");
     }
 
@@ -100,7 +100,7 @@ Meteor.methods({
   acceptTransfer(source, token) {
     check(source, String);
     check(token, String);
-    if (!isSignedUp()) {
+    if (!globalDb.isSignedUp()) {
       throw new Meteor.Error(403, "Must be logged in to start transfers.");
     }
     if (globalDb.isUserOverQuota(Meteor.user())) {

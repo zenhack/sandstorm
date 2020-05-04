@@ -316,7 +316,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "Unauthorized", "Must be logged in to create grains.");
     }
 
-    if (!isSignedUpOrDemo()) {
+    if (!globalDb.isSignedUpOrDemo()) {
       throw new Meteor.Error(403, "Unauthorized",
                              "Only invited users or demo users can create grains.");
     }

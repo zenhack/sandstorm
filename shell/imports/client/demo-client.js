@@ -45,7 +45,7 @@ Router.map(function () {
       if (!this.ready()) return;
       if (Meteor.loggingIn()) return;
 
-      if (!isSignedUp()) {
+      if (!globalDb.isSignedUp()) {
         Session.set("dismissedInstallHint", true);
         Session.set("globalDemoModal", true);
       }
@@ -135,7 +135,7 @@ Router.map(function () {
 
         if (Meteor.loggingIn()) return;
 
-        if (!isSignedUpOrDemo()) {
+        if (!globalDb.isSignedUpOrDemo()) {
           if (!signingIn) {
             signingIn = true;
             // 1. Create the Demo User & 2. Log the user in as this Demo User.

@@ -219,7 +219,7 @@ Meteor.methods({
   },
 
   newRestoreToken() {
-    if (!isSignedUpOrDemo()) {
+    if (!globalDb.isSignedUpOrDemo()) {
       throw new Meteor.Error(403, "Unauthorized", "Only invited users can restore backups.");
     }
 
@@ -232,7 +232,7 @@ Meteor.methods({
   },
 
   restoreGrain(tokenId, obsolete) {
-    if (!isSignedUpOrDemo()) {
+    if (!globalDb.isSignedUpOrDemo()) {
       throw new Meteor.Error(403, "User cannot create grains");
     }
     this.unblock();

@@ -79,7 +79,7 @@ Router.map(function () {
           // Probably security error because window.opener is in a different domain.
         }
 
-        if (!isSignedUp() && !globalDb.isDemoUser()) {
+        if (!globalDb.isSignedUp() && !globalDb.isDemoUser()) {
           handle.setError("This Sandstorm server requires you to get an invite before installing apps.");
           return handle;
         }

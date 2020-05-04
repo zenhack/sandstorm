@@ -55,7 +55,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "Invalid key or already used.");
     }
 
-    if (isSignedUp() && user.payments && user.payments.id) {
+    if (globalDb.isSignedUp() && user.payments && user.payments.id) {
       // This user is already signed up with a payment account. Possibly, they signed up before
       // using their invite, and then went back and clicked on the invite. As a result they
       // probably now have two payment accounts. Mark this invite as used but also add a special
