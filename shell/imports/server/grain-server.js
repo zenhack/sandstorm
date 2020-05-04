@@ -321,7 +321,7 @@ Meteor.methods({
                              "Only invited users or demo users can create grains.");
     }
 
-    if (isUserOverQuota(Meteor.user())) {
+    if (globalDb.isUserOverQuota(Meteor.user())) {
       throw new Meteor.Error(402,
           "You are out of storage space. Please delete some things and try again.");
     }

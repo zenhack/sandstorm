@@ -133,7 +133,7 @@ export const restoreGrainBackup = (tokenId, user, transferInfo) => {
     throw new Meteor.Error(403, "Token was not found");
   }
 
-  if (isUserOverQuota(user)) {
+  if (globalDb.isUserOverQuota(user)) {
     throw new Meteor.Error(402,
         "You are out of storage space. Please delete some things and try again.");
   }
@@ -223,7 +223,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "Unauthorized", "Only invited users can restore backups.");
     }
 
-    if (isUserOverQuota(Meteor.user())) {
+    if (globalDb.isUserOverQuota(Meteor.user())) {
       throw new Meteor.Error(402,
           "You are out of storage space. Please delete some things and try again.");
     }

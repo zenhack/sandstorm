@@ -268,11 +268,11 @@ Template.sandstormGrainListPage.events({
 });
 
 const ifQuotaAvailable = function (next) {
-  const reason = isUserOverQuota(Meteor.user());
+  const reason = globalDb.isUserOverQuota(Meteor.user());
   if (reason) {
     showBillingPrompt(reason, function () {
       // If the user successfully raised their quota, continue the operation.
-      if (!isUserOverQuota(Meteor.user())) {
+      if (!globalDb.isUserOverQuota(Meteor.user())) {
         next();
       }
     });
@@ -725,7 +725,7 @@ Template.root.helpers({
   },
 
   overQuota: function () {
-    return !Meteor.settings.public.stripePublicKey && isUserOverQuota(Meteor.user());
+    return !Meteor.settings.public.stripePublicKey && globalDb.isUserOverQuota(Meteor.user());
   },
 });
 

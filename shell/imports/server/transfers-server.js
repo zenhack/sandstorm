@@ -103,7 +103,7 @@ Meteor.methods({
     if (!isSignedUp()) {
       throw new Meteor.Error(403, "Must be logged in to start transfers.");
     }
-    if (isUserOverQuota(Meteor.user())) {
+    if (globalDb.isUserOverQuota(Meteor.user())) {
       throw new Meteor.Error(402,
           "You are out of storage space. Please delete some things and try again.");
     }
