@@ -273,7 +273,7 @@ Template.loginButtonsDialog.helpers({
 });
 
 Template.loginButtonsList.onCreated(function () {
-  if (isDemoUser()) {
+  if (globalDb.isDemoUser()) {
     this._linkingNewCredential = { doneCallback() {} };
   } else if (Template.parentData(1).linkingNewCredential) {
     this._linkingNewCredential = Template.parentData(1).linkingNewCredential;

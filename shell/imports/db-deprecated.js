@@ -66,7 +66,6 @@ Misc = globalDb.collections.misc;
 Settings = globalDb.collections.settings;
 
 currentUserGrains = globalDb.currentUserGrains.bind(globalDb);
-isDemoUser = globalDb.isDemoUser.bind(globalDb);
 isSignedUp = globalDb.isSignedUp.bind(globalDb);
 isSignedUpOrDemo = globalDb.isSignedUpOrDemo.bind(globalDb);
 isUserOverQuota = globalDb.isUserOverQuota.bind(globalDb);

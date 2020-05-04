@@ -40,7 +40,7 @@ Meteor.methods({
       return;
     }
 
-    if (isDemoUser()) {
+    if (globalDb.isDemoUser()) {
       throw new Meteor.Error(403,
           "Demo users cannot accept invite keys. Please sign in as a real user.");
     }

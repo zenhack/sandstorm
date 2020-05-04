@@ -113,7 +113,7 @@ if (allowDemo) {
     },
 
     testExpireDemo: function () {
-      if (!isDemoUser()) throw new Meteor.Error(403, "not a demo user");
+      if (!globalDb.isDemoUser()) throw new Meteor.Error(403, "not a demo user");
 
       const newExpires = new Date(Date.now() + 15000);
       if (Meteor.user().expires.getTime() < newExpires.getTime()) {

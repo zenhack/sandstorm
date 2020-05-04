@@ -104,7 +104,7 @@ Meteor.methods({
     const pkg = globalDb.collections.packages.findOne(packageId);
 
     if (!pkg || pkg.status !== "ready") {
-      if (!this.userId || isDemoUser() || globalDb.isUninvitedFreeUser()) {
+      if (!this.userId || globalDb.isDemoUser() || globalDb.isUninvitedFreeUser()) {
         if (!isSafeDemoAppUrl(url)) {
           // TODO(someday): Billing prompt on client side.
           throw new Meteor.Error(403, "Sorry, demo and free users cannot upload custom apps; " +

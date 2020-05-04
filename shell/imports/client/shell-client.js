@@ -624,7 +624,7 @@ Template.layout.helpers({
   },
 
   showAccountButtons: function () {
-    return Meteor.user() && !Meteor.loggingIn() && !isDemoUser();
+    return Meteor.user() && !Meteor.loggingIn() && !globalDb.isDemoUser();
   },
 
   accountButtonsData: function () {
@@ -637,7 +637,7 @@ Template.layout.helpers({
   },
 
   firstLogin: function () {
-    return credentialsSubscription.ready() && !isDemoUser() && !Meteor.loggingIn()
+    return credentialsSubscription.ready() && !globalDb.isDemoUser() && !Meteor.loggingIn()
         && Meteor.user() && !Meteor.user().hasCompletedSignup &&
         !isStandalone();
   },

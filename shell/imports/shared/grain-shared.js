@@ -110,7 +110,7 @@ Meteor.methods({
         numDeleted = globalDb.collections.grains.remove(grainsQuery);
       } else {
         numDeleted = globalDb.deleteGrains(grainsQuery, globalBackend,
-                                           isDemoUser() ? "demoGrain" : "grain");
+                                           globalDb.isDemoUser() ? "demoGrain" : "grain");
       }
 
       // Usually we don't automatically remove user-owned tokens that have become invalid,
