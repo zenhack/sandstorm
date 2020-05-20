@@ -619,6 +619,11 @@
       "integrity": "sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==",
       "dev": true
     },
+    "capnp": {
+      "version": "0.5.0",
+      "resolved": "https://registry.npmjs.org/capnp/-/capnp-0.5.0.tgz",
+      "integrity": "sha512-ku0NLg3GB5dLRXhv/nVIVTi/hrAUDbfAMZ7dn8xc0e6MYcutimrgzAHcrMvw7Wx7229F+lNx2+JIP/JchpJP6w=="
+    },
     "capture-stack-trace": {
       "version": "1.0.1",
       "resolved": "https://registry.npmjs.org/capture-stack-trace/-/capture-stack-trace-1.0.1.tgz",
