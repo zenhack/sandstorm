@@ -1157,6 +1157,7 @@ void SupervisorMain::setupSeccomp() {
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(fdatasync), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(ftruncate), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getdents), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getdents64), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getcwd), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(chdir), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(fchdir), 0));
@@ -1179,6 +1180,22 @@ void SupervisorMain::setupSeccomp() {
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(epoll_wait), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(epoll_pwait), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(epoll_ctl), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(signalfd), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(signalfd4), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(eventfd), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(eventfd2), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(inotify_init), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(inotify_init1), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(inotify_add_watch), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(inotify_rm_watch), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(futex), 0));
+
+  // cap-friendly versions of boring syscalls:
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(openat), 0));
+
+  // An older way of setting files to non-blocking mode:
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(ioctl), 1,
+        SCMP_A1(SCMP_CMP_EQ, FIONBIO)));
 
   // TODO: Do we need shm*? I(zenhack) am under the impression that these are
   // emulated via mmap() in /dev/shm, but the syscall table does have numbers
@@ -1235,13 +1252,16 @@ void SupervisorMain::setupSeccomp() {
     }
   }
 
-  for(int optname : {SO_ACCEPTCONN, SO_DOMAIN, SO_ERROR, SO_PROTOCOL}) {
+  for(int optname : {SO_ACCEPTCONN, SO_DOMAIN, SO_ERROR, SO_PROTOCOL, SO_TYPE,
+                     SO_SNDLOWAT}) {
     // read only socket options.
     CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getsockopt), 2,
           SCMP_A1(SCMP_CMP_EQ, SOL_SOCKET),
           SCMP_A2(SCMP_CMP_EQ, (scmp_datum_t)optname)));
   }
-  for(int optname : {SO_BROADCAST, SO_KEEPALIVE, SO_LINGER, SO_OOBINLINE}) {
+  for(int optname : {SO_BROADCAST, SO_KEEPALIVE, SO_LINGER, SO_OOBINLINE,
+                     SO_REUSEADDR, SO_SNDBUF, SO_RCVBUF, SO_RCVTIMEO,
+                     SO_SNDTIMEO, SO_RCVLOWAT}) {
     // read-write socket options.
     CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getsockopt), 2,
           SCMP_A1(SCMP_CMP_EQ, SOL_SOCKET),
@@ -1259,6 +1279,7 @@ void SupervisorMain::setupSeccomp() {
 
   // Benign networking syscalls. The dangerous bits are covered above:
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(accept), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(accept4), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(connect), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(listen), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(bind), 0));
