@@ -42,10 +42,11 @@ NODEJS=$(METEOR_DEV_BUNDLE)/bin/node
 NODE_HEADERS=$(METEOR_DEV_BUNDLE)/include/node
 WARNINGS=-Wall -Wextra -Wglobal-constructors -Wno-sign-compare -Wno-unused-parameter
 CXXFLAGS2=-std=c++1z $(WARNINGS) $(CXXFLAGS) -DSANDSTORM_BUILD=$(BUILD) -DKJ_HAS_OPENSSL -DKJ_HAS_ZLIB -DKJ_HAS_LIBDL -pthread -fPIC -I$(NODE_HEADERS) -DKJ_STD_COMPAT
-CFLAGS2=$(CFLAGS) -pthread -fPIC -DKJ_STD_COMPAT
+CFLAGS2=$(CFLAGS) -pthread -fPIC -DKJ_STD_COMPAT -fsanitize=address
 # -lrt is not used by sandstorm itself, but the test app uses it. It would be
 #  nice if we could not link everything against it.
-LIBS2=$(LIBS) deps/libsodium/build/src/libsodium/.libs/libsodium.a deps/boringssl/build/ssl/libssl.a deps/boringssl/build/crypto/libcrypto.a -lz -ldl -pthread -lrt
+LIBS2=$(LIBS) deps/libsodium/build/src/libsodium/.libs/libsodium.a deps/boringssl/build/ssl/libssl.a deps/boringssl/build/crypto/libcrypto.a -lz -ldl -pthread -lrt \
+      -fsanitize=address
 
 define color
   printf '\033[0;34m==== $1 ====\033[0m\n'
