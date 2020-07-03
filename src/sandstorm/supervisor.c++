@@ -1091,6 +1091,7 @@ void SupervisorMain::setupSeccomp() {
   // "natural," i.e. like something applications should be expected to
   // handle.
   scmp_filter_ctx ctx = seccomp_init(SCMP_ACT_ERRNO(ENOSYS));
+  //scmp_filter_ctx ctx = seccomp_init(SCMP_ACT_LOG);
   if (ctx == nullptr)
     KJ_FAIL_SYSCALL("seccomp_init", 0);  // No real error code
   KJ_DEFER(seccomp_release(ctx));
@@ -1166,6 +1167,8 @@ void SupervisorMain::setupSeccomp() {
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getpgrp), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getpid), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getppid), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getrandom), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(gettid), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(gettimeofday), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getuid), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getuid32), 0));
@@ -1188,6 +1191,7 @@ void SupervisorMain::setupSeccomp() {
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(pipe), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(poll), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(pread64), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(prlimit64), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(pwrite64), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(read), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(readlink), 0));
@@ -1199,13 +1203,15 @@ void SupervisorMain::setupSeccomp() {
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(select), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(sendfile), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(sendfile64), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(set_tid_address), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(setitimer), 0));
-  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(setitimer), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(sigaltstack), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(signalfd), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(signalfd4), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(stat), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(symlink), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(umask), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(uname), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(unlink), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(vfork), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(wait4), 0));
@@ -1317,6 +1323,10 @@ void SupervisorMain::setupSeccomp() {
     CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(clone), 1,
         SCMP_A2(SCMP_CMP_MASKED_EQ, (scmp_datum_t)allowed_clone_flags, 0)));
   }
+
+  // Architecture specific whitelist; if we ever support non-x86_64 machines,
+  // we will want to pay attention to this list:
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(arch_prctl), 0));
 
   // End whitelist.
   //
