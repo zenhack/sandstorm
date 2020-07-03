@@ -56,6 +56,7 @@
 #include <linux/rtnetlink.h>
 #include <sys/eventfd.h>
 #include <sys/resource.h>
+#include <termios.h>
 
 // We need to define these constants before libseccomp has a chance to inject bogus
 // values for them. See https://github.com/seccomp/libseccomp/issues/27
@@ -1365,6 +1366,29 @@ void SupervisorMain::setupSeccomp() {
 
   // This is the correct return code for an invalid ioctl:
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ERRNO(EINVAL), SCMP_SYS(ioctl), 0));
+
+#if 0
+  // Return ENOTTY for the most common tty ioctls. There are more listed in tty_ioctl(4),
+  // but some of these seem to not have defined constants, or be of different types...
+  // hopefully this list is good enough, the rest will hit the fallback rule.
+  for(int cmd : {TCGETS, TCSETS, TCSETSW, TCSETSF,
+                 TCGETA, TCSETA, TCSETAW, TCSETAF,
+                 TIOCGLCKTRMIOS, TIOCSLCKTRMIOS,
+                 TIOCGWINSZ, TIOCSWINSZ,
+                 TCSBRK, TCSBRKP, TIOCCBRK,
+                 TCXONC,
+                 FIONREAD, TIOCINQ, TIOCOUTQ, TCFLSH,
+                 TIOCSTI,
+                 TIOCCONS,
+                 TIOCSCTTY, TIOCNOTTY,
+                 TIOCSPGRP, TIOCGSID,
+                 TIOCEXCL, TIOCNXCL,
+                 TIOCGETD, TIOCSETD,
+                 }) {
+    CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ERRNO(ENOTTY), SCMP_SYS(ioctl), 1,
+          SCMP_A1(SCMP_CMP_EQ, (scmp_datum_t)cmd)));
+  }
+#endif
 
 #if 0
   // Disable some things that seem scary.
