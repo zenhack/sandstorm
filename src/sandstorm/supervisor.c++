@@ -1121,6 +1121,7 @@ void SupervisorMain::setupSeccomp() {
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(chdir), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(chmod), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(close), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(clock_gettime), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(creat), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(dup), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(dup2), 0));
@@ -1200,6 +1201,7 @@ void SupervisorMain::setupSeccomp() {
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(rmdir), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(rt_sigaction), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(rt_sigprocmask), 0));
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(rt_sigreturn), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(select), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(sendfile), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(sendfile64), 0));
@@ -1284,7 +1286,7 @@ void SupervisorMain::setupSeccomp() {
   for(int optname : {SO_BROADCAST, SO_KEEPALIVE, SO_LINGER, SO_OOBINLINE,
                      SO_REUSEADDR, SO_SNDBUF, SO_RCVBUF, SO_RCVTIMEO,
                      SO_SNDTIMEO, SO_RCVLOWAT}) {
-    // read-write socket options.
+    // read-write socket options for SOL_SOCKET.
     CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getsockopt), 2,
           SCMP_A1(SCMP_CMP_EQ, SOL_SOCKET),
           SCMP_A2(SCMP_CMP_EQ, (scmp_datum_t)optname)));
@@ -1292,6 +1294,9 @@ void SupervisorMain::setupSeccomp() {
           SCMP_A1(SCMP_CMP_EQ, SOL_SOCKET),
           SCMP_A2(SCMP_CMP_EQ, (scmp_datum_t)optname)));
   }
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(setsockopt), 2,
+        SCMP_A1(SCMP_CMP_EQ, IPPROTO_TCP),
+        SCMP_A2(SCMP_CMP_EQ, TCP_NODELAY)));
 
   // TODO: should we filter any of the flags for these?
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(recvfrom), 0));
@@ -1358,6 +1363,8 @@ void SupervisorMain::setupSeccomp() {
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ERRNO(ENOTSUP), SCMP_SYS(flistxattr), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ERRNO(ENOTSUP), SCMP_SYS(fremovexattr), 0));
 
+  // This is the correct return code for an invalid ioctl:
+  CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ERRNO(EINVAL), SCMP_SYS(ioctl), 0));
 
 #if 0
   // Disable some things that seem scary.
