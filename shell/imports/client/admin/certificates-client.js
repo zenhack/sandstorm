@@ -43,6 +43,10 @@ const DNS_PROVIDERS = {
 };
 
 Template.newAdminCertificates.helpers({
+  https() {
+    return window.location.protocol === 'https';
+  },
+
   saveDisabled() {
     const instance = Template.instance();
     return instance.formState.get().state === "submitting" ||

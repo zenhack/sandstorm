@@ -19,143 +19,151 @@
   {{/if}}
 
   <div class="admin-certificates">
-    <p><strong>HELP:</strong> This UI is new, and obviously needs a lot of work. Would you like to
-      help the Sandstorm project by improving this UI?
-      <a target="_blank" href="https://github.com/sandstorm-io/sandstorm/issues/3300">Let us know
-      on this GitHub issue!</a></p>
 
-    <h2>Current Certificate Details</h2>
+  <p>This page allows you to configure Sandstorm's HTTPS/TLS support.</p>
+
+  {{#if https}}
+    <p>&#x2705; Your Sandstorm Server is using TLS.</p>
 
     <table>
-      <tr><td>Current certificate expires:</td><td>{{expires}}</td></tr>
-      <tr><td>Will attempt renewal at:</td><td>{{renewAt}}</td></tr>
-    </table>
-
-    <h2>Automatic Certificate Renewal</h2>
-
-    <p>Use Let's Encrypt -- or any other ACME certificate provider -- to automatically renew your
-      certificate.</p>
-
-    <h3>ACME account:</h3>
-    {{#with acmeAccount}}
-      <table>
-        <tr><td>Directory URL:</td><td>{{directory}}</td></tr>
-        <tr><td>Contact e-mail:</td><td>{{email}}</td></tr>
-        <tr><td></td><td><button class="forget-acme-account button-danger">Forget ACME account</button></td></tr>
-      </table>
-    {{else}}
-      <p>No ACME account configured.</p>
-      <p>
-        <button class="create-account button-primary">Create Account</button>
-      </p>
-    {{/with}}
-
-    <h3>DNS provider:</h3>
-    {{#with acmeChallenge}}
-      <table>
-        <tr><td>Configured provider:</td><td>{{providerName}}</td></tr>
-        {{#unless isSandcats}}
-          <tr><td></td><td><button class="forget-dns button-danger">Forget DNS provider</button></td></tr>
-        {{/unless}}
-      </table>
-    {{else}}
-      <p>No DNS API configured. To renew certificates, Sandstorm needs access to your DNS provider
-        in order to pass ACME DNS-01 challenges. Passing a DNS challenge is required to issue a
-        wildcard certificate, which Sandstorm requires.</p>
-      <p><button class="configure-dns button-primary">Configure DNS</button></p>
-    {{/with}}
-
-    {{#if acmeAccount}}
-      {{#if acmeChallenge}}
-        <h3>Fetch Now</h3>
+      <tr>
+        <th>Current Certificate Expires At:</th>
+        <td>{{expires}}</td>
+      </tr>
+      {{#with acmeAccount}}
+      <tr>
+        <th>Will Attempt Renewal At:</th>
         {{#if currentlyRenewing}}
-          <p>Sandstorm is currently fetching a certificate. This can take several minutes.
-            <a href="/admin/status">Check the system log</a> for updates.</p>
+          <td>Renewing now; please wait.</td>
         {{else}}
-          <p>Sandstorm will automatically fetch a new certificate when yours is close to expiration.
-            Press this button only if you want to force a certificate to be fetched now.</p>
-          <p><button class="fetch-cert-now button-primary">Fetch Certificate Now</button></p>
+          <td>{{renewAt}} <button class="fetch-cert-now button-primary">Renew Now</button></td>
         {{/if}}
-      {{/if}}
+      </tr>
+      {{/with}}
+    </table>
+    {{#if acmeAccount}}
+		{{else}}
+    <p>&#x26a0; Your certificate will not be renewed automatically.</p>
     {{/if}}
+  {{else}}
+    <p>&#x26a0; Your Sandstorm Server is not currently using TLS.</p>
+  {{/if}}
 
-    <h2>Manual Certificate Upload</h2>
+  <h2>
+    <input type="radio" id="use-cert-acme" name="cert-method" />
+    <label for="use-cert-acme">Manage certificates with ACME/Let's Encrypt</label>
+  </h2>
 
-    <p>Use this if your certificate provider doesn't support ACME.</p>
+  {{#with acmeAccount}}
+    <h3>ACME Account Details</h3>
+    <table>
+      <tr><th>Directory URL:</th><td>{{directory}}</td></tr>
+      <tr><th>Contact e-mail:</th><td>{{email}}</td></tr>
+      <tr><td></td><td><button class="forget-acme-account button-danger">Forget ACME account</button></td></tr>
+    </table>
+  {{else}}
+    <p>No ACME account configured. <button class="create-account button-primary">Create Account</button></p>
+  {{/with}}
 
-    <form class="manual-upload">
-      <table>
-        <tr><td>Private key PEM:</td><td><input type="file" name="key"></td></tr>
-        <tr><td>Certificate chain PEM:</td><td><input type="file" name="cert"></td></tr>
-        <tr><td></td><td><button class="button-primary" type="submit">Upload</button></td></tr>
-      </table>
-    </form>
+	<h3>DNS Provider</h3>
+  {{#with acmeChallenge}}
+		{{providerName}}
+		{{#unless isSandcats}}
+			<button class="forget-dns button-danger">Forget DNS provider</button>
+		{{/unless}}
+  {{else}}
+    <p>No DNS provider configured. Sandstorm needs access to your DNS provider in order to pass
+    ACME DNS-01 challenges, which is required to issue wildcard certificates, which
+    Sandstorm requires. <button class="configure-dns button-primary">Configure DNS</button></p>
+  {{/with}}
 
-    {{#with modal}}
-      {{#modalDialogWithBackdrop onDismiss=onDismiss}}
-        {{#with createAccount}}
-          {{#if queryTos}}
-            {{#if tosUrl}}
-              <p>Do you accept the certificate provider's <a href="{{tosUrl}}" target="_blank">Terms of Service</a>?</p>
-            {{else}}
-              <p>Do you accept the certificate provider's Terms of Service?</p>
-            {{/if}}
-            <p><button disabled={{loading}} class="agree-acme-tos button-primary">I agree</button></p>
+  <h2>
+    <input type="radio" id="use-cert-manual" name="cert-method" />
+    <label for="use-cert-manual">Manually upload a certificate</label>
+  </h2>
+
+  <form class="manual-upload">
+    <table>
+      <tr>
+        <th><label for="key">Private key PEM:</label></th>
+        <td><input type="file" name="key"></td>
+      </tr>
+      <tr>
+        <th><label for="cert">Certificate chain PEM:</label></th>
+        <td><input type="file" name="cert"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><button class="button-primary" type="submit">Upload</button></td>
+      </tr>
+    </table>
+  </form>
+
+  {{#with modal}}
+    {{#modalDialogWithBackdrop onDismiss=onDismiss}}
+      {{#with createAccount}}
+        {{#if queryTos}}
+          {{#if tosUrl}}
+            <p>Do you accept the certificate provider's <a href="{{tosUrl}}" target="_blank">Terms of Service</a>?</p>
           {{else}}
-            <form class="create-account">
-              <table>
-                <tr>
-                  <td>ACME Service:</td>
-                  <td>
-                    <input disabled={{loading}} type="text" name="directory" value="https://acme-v02.api.letsencrypt.org/directory"><br>
-                    (Leave unchanged for Let's Encrypt.)
-                  </td>
-                </tr>
-                <tr>
-                  <td>Your e-mail:</td>
-                  <td><input disabled={{loading}} type="email" name="email"></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td><button disabled={{loading}} class="button-primary" type="submit">Next</button></td>
-                </tr>
-              </table>
-            </form>
+            <p>Do you accept the certificate provider's Terms of Service?</p>
           {{/if}}
-        {{/with}}
-
-        {{#with chooseDns}}
-          <form class="choose-dns">
+          <p><button disabled={{loading}} class="agree-acme-tos button-primary">I agree</button></p>
+        {{else}}
+          <form class="create-account">
             <table>
               <tr>
-                <td>Provider:</td>
+                <td>ACME Service:</td>
                 <td>
-                  <select class="choose-module" name="module">
-                    {{#each dnsOptions}}
-                      <option value="{{module}}">{{title}}</option>
-                    {{/each}}
-                  </select>
+                  <input disabled={{loading}} type="text" name="directory" value="https://acme-v02.api.letsencrypt.org/directory"><br>
+                  (Leave unchanged for Let's Encrypt.)
                 </td>
               </tr>
               <tr>
-                <td>Options JSON:</td>
-                <td>
-                  <p>Please enter the necessary configuration for this module in JSON format. See
-                    <a href="https://www.npmjs.com/package/acme-dns-01-{{selectedModule}}"
-                      target="_blank">the README for acme-dns-01-{{selectedModule}}</a>
-                    for information about the options format.</p>
-                  <textarea placeholder="{ ... }" name="options"></textarea>
-                </td>
+                <td>Your e-mail:</td>
+                <td><input disabled={{loading}} type="email" name="email"></td>
               </tr>
               <tr>
                 <td></td>
-                <td><button disabled={{loading}} class="button-primary" type="submit">OK</button></td>
+                <td><button disabled={{loading}} class="button-primary" type="submit">Next</button></td>
               </tr>
             </table>
           </form>
-        {{/with}}
-      {{/modalDialogWithBackdrop}}
-    {{/with}}
+        {{/if}}
+      {{/with}}
+
+      {{#with chooseDns}}
+        <form class="choose-dns">
+          <table>
+            <tr>
+              <td>Provider:</td>
+              <td>
+                <select class="choose-module" name="module">
+                  {{#each dnsOptions}}
+                    <option value="{{module}}">{{title}}</option>
+                  {{/each}}
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Options JSON:</td>
+              <td>
+                <p>Please enter the necessary configuration for this module in JSON format. See
+                  <a href="https://www.npmjs.com/package/acme-dns-01-{{selectedModule}}"
+                    target="_blank">the README for acme-dns-01-{{selectedModule}}</a>
+                  for information about the options format.</p>
+                <textarea placeholder="{ ... }" name="options"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><button disabled={{loading}} class="button-primary" type="submit">OK</button></td>
+            </tr>
+          </table>
+        </form>
+      {{/with}}
+    {{/modalDialogWithBackdrop}}
+  {{/with}}
   </div>
 {{/let}}
 </template>
