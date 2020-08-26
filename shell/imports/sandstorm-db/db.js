@@ -1131,6 +1131,25 @@ class SandstormDb {
     };
   }
 
+  storageByUserId() {
+    // returns object mapping user id -> storage usage (i.e. total)
+    // Users with no grains will not appear in the map.
+    //
+    // Note: Theoretically we could use the Users.storageUsage field,
+    // but that's only actually populated on blackrock...
+
+    let result = {};
+    // TODO(now): how do we remove
+    this.collections.grains.find({}, {userId: 1, size: 1}).forEach(grain => {
+      if(grain.userId in result) {
+        result[grain.userId] += grain.size;
+      } else {
+        result[grain.userId] = grain.size;
+      }
+    });
+    return result;
+  }
+
   isAdmin() {
     // Returns true if the user is the administrator.
 

@@ -955,6 +955,7 @@
         "header": {
           "name": "Name",
           "credentials": "Credentials",
+          "storage": "Storage",
           "created": "Created",
           "lastActive": "Last Active",
           "actions": "Actions"

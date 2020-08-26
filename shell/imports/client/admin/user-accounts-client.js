@@ -186,6 +186,8 @@ Template.newAdminUsers.onCreated(function () {
       loginCredentials: { $exists: 1 },
     });
 
+    const storageByUserId = globalDb.storageByUserId();
+
     const users = accounts.map((account) => {
       SandstormDb.fillInPictureUrl(account);
       const credentialIds = SandstormDb.getUserCredentialIds(account);
@@ -202,10 +204,17 @@ Template.newAdminUsers.onCreated(function () {
 
         return credential;
       });
+
+      let storage = storageByUserId[account._id];
+      if(storage === undefined) {
+        storage = 0;
+      }
+
       return {
         _id: account._id,
         account,
         credentials,
+        storage,
       };
     });
 

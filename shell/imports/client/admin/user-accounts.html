@@ -37,6 +37,9 @@
         {{/each}}
       </ul>
     </div>
+    <div class="storage" role="gridcell">
+			{{ user.storage }}
+    </div>
     <div class="created" role="gridcell">
       {{ dateString user.account.createdAt }}
     </div>
@@ -64,6 +67,8 @@
         <div class="account-role" role="columnheader"></div>
         <div class="profile-name" role="columnheader">{{_ (con txt "header.name")}}</div>
         <div class="credentials" role="columnheader">{{_ (con txt "header.credentials")}}</div>
+				<!-- TODO: sort order. -->
+				<div class="storage" role="columnheader">{{_ (con txt "header.storage") }}</div>
         <div class="created" role="columnheader">
           {{_ (con txt "header.created")}}
           {{#if equal sortOrder.key "createdAt"}}
