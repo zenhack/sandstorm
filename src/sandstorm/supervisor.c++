@@ -573,6 +573,9 @@ kj::MainFunc SupervisorMain::getMain() {
                  "Dump libseccomp PFC output.")
       .addOption({'n', "new"}, [this]() { setIsNew(true); return true; },
                  "Initializes a new grain.  (Otherwise, runs an existing one.)")
+      .addOption({"use-experimental-seccomp-filter"},
+                 [this]() { setUseExperimentalSeccompFilter(true); return true; },
+                 "Use the new, experimental seccomp filter.")
       .expectArg("<app-name>", KJ_BIND_METHOD(*this, setAppName))
       .expectArg("<grain-id>", KJ_BIND_METHOD(*this, setGrainId))
       .expectOneOrMoreArgs("<command>", KJ_BIND_METHOD(*this, addCommandArg))
@@ -585,6 +588,10 @@ kj::MainFunc SupervisorMain::getMain() {
 
 void SupervisorMain::setIsNew(bool isNew) {
   this->isNew = isNew;
+}
+
+void SupervisorMain::setUseExperimentalSeccompFilter(bool use) {
+  this->useExperimentalSeccompFilter = use;
 }
 
 void SupervisorMain::setMountProc(bool mountProc) {
@@ -2213,7 +2220,11 @@ kj::Promise<void> SupervisorMain::DefaultSystemConnector::run(
 // -----------------------------------------------------------------------------
 
 void SupervisorMain::setupSeccomp() {
-  setupSeccompLegacy(devmode, seccompDumpPfc);
+  if(useExperimentalSeccompFilter) {
+    setupSeccompNew();
+  } else {
+    setupSeccompLegacy(devmode, seccompDumpPfc);
+  }
 }
 
 [[noreturn]] void SupervisorMain::runSupervisor(int apiFd, kj::AutoCloseFd startEventFd) {
