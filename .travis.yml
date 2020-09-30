@@ -1,0 +1,17 @@
+language: cpp
+
+dist: bionic
+
+compiler:
+  - gcc
+
+os:
+  - linux
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install build-essential libcap-dev xz-utils zip unzip strace curl discount git python zlib1g-dev golang-go cmake
+  - curl https://install.meteor.com/?release=1.8.2 | sh
+
+script:
+  - make
