@@ -481,6 +481,8 @@ void setupSeccompNew() {
           SCMP_A1(SCMP_CMP_EQ, (scmp_datum_t)cmd)));
   }
 #endif
+
+  CHECK_SECCOMP(seccomp_load(ctx));
 }
 
 
