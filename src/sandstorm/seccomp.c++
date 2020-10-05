@@ -172,7 +172,7 @@ void setupSeccompLegacy(bool devmode, bool dumpPfc) {
   //   disable things until we've reviewed them?
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ERRNO(ENOSYS), SCMP_SYS(userfaultfd), 0));
 
-  // TOOD(someday): See if we can get away with turning off mincore, madvise, sysinfo etc.
+  // TODO(someday): See if we can get away with turning off mincore, madvise, sysinfo etc.
 
   // TODO(someday): Turn off POSIX message queues and other such esoteric features.
 
@@ -186,7 +186,7 @@ void setupSeccompLegacy(bool devmode, bool dumpPfc) {
 void setupSeccompNew() {
   // Install a rudimentary seccomp whitelist.
 
-  // Default action is to return ENOSYS. This is a good default though as
+  // Default action is to return ENOSYS. This is a good default as
   // it means using applications using newer syscalls will behave just as
   // they would on an older kernel. Where we want to disallow something and
   // this behavior doesn't make sense, we try to override it to seem more
