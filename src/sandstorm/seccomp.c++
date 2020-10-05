@@ -456,10 +456,14 @@ void setupSeccompNew() {
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ERRNO(ENOTSUP), SCMP_SYS(flistxattr), 0));
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ERRNO(ENOTSUP), SCMP_SYS(fremovexattr), 0));
 
+#if 0
+  // TODO: this conflicts with the other ioctl rules; figure out how to make
+  // them co-exist.
+
   // This is the correct return code for an invalid ioctl:
   CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ERRNO(EINVAL), SCMP_SYS(ioctl), 0));
+#endif
 
-#if 0
   // Return ENOTTY for the most common tty ioctls. There are more listed in tty_ioctl(4),
   // but some of these seem to not have defined constants, or be of different types...
   // hopefully this list is good enough, the rest will hit the fallback rule.
@@ -480,7 +484,6 @@ void setupSeccompNew() {
     CHECK_SECCOMP(seccomp_rule_add(ctx, SCMP_ACT_ERRNO(ENOTTY), SCMP_SYS(ioctl), 1,
           SCMP_A1(SCMP_CMP_EQ, (scmp_datum_t)cmd)));
   }
-#endif
 
   CHECK_SECCOMP(seccomp_load(ctx));
 }
