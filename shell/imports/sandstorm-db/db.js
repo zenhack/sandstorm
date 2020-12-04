@@ -1077,19 +1077,19 @@ function makeApiHost(token) {
   return makeWildcardHost(apiHostIdForToken(token));
 }
 
-class SandstormDb {
-  constructor(quotaManager) {
-    // quotaManager is an object with the following method:
-    //   updateUserQuota: It is provided two arguments
-    //     db: This SandstormDb object
-    //     user: A collections.users account object
-    //   and returns a quota object:
-    //     storage: A number (can be Infinity)
-    //     compute: A number (can be Infinity)
-    //     grains: A number (can be Infinity)
+function makeSandstormDb(quotaManager) {
+  // quotaManager is an object with the following method:
+  //   updateUserQuota: It is provided two arguments
+  //     db: This SandstormDb object
+  //     user: A collections.users account object
+  //   and returns a quota object:
+  //     storage: A number (can be Infinity)
+  //     compute: A number (can be Infinity)
+  //     grains: A number (can be Infinity)
 
-    this.quotaManager = quotaManager;
-    this.collections = {
+  return {
+    quotaManager,
+    collections: {
       // Direct access to underlying collections. DEPRECATED, but better than accessing the top-level
       // collection globals directly.
       //
@@ -1128,144 +1128,149 @@ class SandstormDb {
       scheduledJobs: ScheduledJobs,
       incomingTransfers: IncomingTransfers,
       outgoingTransfers: OutgoingTransfers,
-    };
-  }
+    },
 
-  isAdmin() {
-    // Returns true if the user is the administrator.
+    isAdmin() {
+      // Returns true if the user is the administrator.
 
-    const user = Meteor.user();
-    if (user && user.isAdmin) {
-      return true;
-    } else {
+      const user = Meteor.user();
+      if (user && user.isAdmin) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    isAdminById(id) {
+      // Returns true if the user's id is the administrator.
+
+      const user = Meteor.users.findOne({ _id: id }, { fields: { isAdmin: 1 } });
+      if (user && user.isAdmin) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    allowDevAccounts() {
+      const setting = this.collections.settings.findOne({ _id: "devAccounts" });
+      if (setting) {
+        return setting.value;
+      } else {
+        return Meteor.settings && Meteor.settings.public &&
+               Meteor.settings.public.allowDevAccounts;
+      }
+    },
+
+    isDemoUser() {
+      // Returns true if this is a demo user.
+
+      const user = Meteor.user();
+      if (user && user.expires) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    isSignedUp() {
+      const user = Meteor.user();
+      return this.isAccountSignedUp(user);
+    },
+
+    isAccountSignedUp(user) {
+      // Returns true if the user has presented an invite key.
+
+      if (!user) return false;  // not signed in
+
+      if (user.type != "account") return false;  // not an account
+
+      if (user.expires) return false;  // demo user.
+
+      if (Meteor.settings.public.allowUninvited) return true;  // all accounts qualify
+
+      if (user.signupKey) return true;  // user is invited
+
+      if (this.isUserInOrganization(user)) return true;
+
       return false;
-    }
-  }
+    },
 
-  isAdminById(id) {
-    // Returns true if the user's id is the administrator.
+    isSignedUpOrDemo() {
+      const user = Meteor.user();
+      return this.isAccountSignedUpOrDemo(user);
+    },
 
-    const user = Meteor.users.findOne({ _id: id }, { fields: { isAdmin: 1 } });
-    if (user && user.isAdmin) {
-      return true;
-    } else {
+    isAccountSignedUpOrDemo(user) {
+      if (!user) return false;  // not signed in
+
+      if (user.type != "account") return false;  // not an account
+
+      if (user.expires) return true;  // demo user.
+
+      if (Meteor.settings.public.allowUninvited) return true;  // all accounts qualify
+
+      if (user.signupKey) return true;  // user is invited
+
+      if (this.isUserInOrganization(user)) return true;
+
       return false;
-    }
-  }
+    },
 
-  allowDevAccounts() {
-    const setting = this.collections.settings.findOne({ _id: "devAccounts" });
-    if (setting) {
-      return setting.value;
-    } else {
-      return Meteor.settings && Meteor.settings.public &&
-             Meteor.settings.public.allowDevAccounts;
-    }
-  }
+    isCredentialInOrganization(credential) {
+      if (!credential || !credential.services) {
+        return false;
+      }
 
-  isDemoUser() {
-    // Returns true if this is a demo user.
-
-    const user = Meteor.user();
-    if (user && user.expires) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  isSignedUp() {
-    const user = Meteor.user();
-    return this.isAccountSignedUp(user);
-  }
-
-  isAccountSignedUp(user) {
-    // Returns true if the user has presented an invite key.
-
-    if (!user) return false;  // not signed in
-
-    if (user.type != "account") return false;  // not an account
-
-    if (user.expires) return false;  // demo user.
-
-    if (Meteor.settings.public.allowUninvited) return true;  // all accounts qualify
-
-    if (user.signupKey) return true;  // user is invited
-
-    if (this.isUserInOrganization(user)) return true;
-
-    return false;
-  }
-
-  isSignedUpOrDemo() {
-    const user = Meteor.user();
-    return this.isAccountSignedUpOrDemo(user);
-  }
-
-  isAccountSignedUpOrDemo(user) {
-    if (!user) return false;  // not signed in
-
-    if (user.type != "account") return false;  // not an account
-
-    if (user.expires) return true;  // demo user.
-
-    if (Meteor.settings.public.allowUninvited) return true;  // all accounts qualify
-
-    if (user.signupKey) return true;  // user is invited
-
-    if (this.isUserInOrganization(user)) return true;
-
-    return false;
-  }
-
-  isCredentialInOrganization(credential) {
-    if (!credential || !credential.services) {
-      return false;
-    }
-
-    const orgMembership = this.getOrganizationMembership();
-    const googleEnabled = orgMembership && orgMembership.google && orgMembership.google.enabled;
-    const googleDomain = orgMembership && orgMembership.google && orgMembership.google.domain;
-    const emailEnabled = orgMembership && orgMembership.emailToken && orgMembership.emailToken.enabled;
-    const emailDomain = orgMembership && orgMembership.emailToken && orgMembership.emailToken.domain;
-    const ldapEnabled = orgMembership && orgMembership.ldap && orgMembership.ldap.enabled;
-    const samlEnabled = orgMembership && orgMembership.saml && orgMembership.saml.enabled;
-    if (emailEnabled && emailDomain && credential.services.email) {
-      const domainSuffixes = emailDomain.split(/\s*,\s*/);
-      for (let i = 0; i < domainSuffixes.length; i++) {
-        const suffix = domainSuffixes[i];
-        const domain = credential.services.email.email.toLowerCase().split("@").pop();
-        if (suffix.startsWith("*.")) {
-          if (domain.endsWith(suffix.substr(1))) {
+      const orgMembership = this.getOrganizationMembership();
+      const googleEnabled = orgMembership && orgMembership.google && orgMembership.google.enabled;
+      const googleDomain = orgMembership && orgMembership.google && orgMembership.google.domain;
+      const emailEnabled = orgMembership && orgMembership.emailToken && orgMembership.emailToken.enabled;
+      const emailDomain = orgMembership && orgMembership.emailToken && orgMembership.emailToken.domain;
+      const ldapEnabled = orgMembership && orgMembership.ldap && orgMembership.ldap.enabled;
+      const samlEnabled = orgMembership && orgMembership.saml && orgMembership.saml.enabled;
+      if (emailEnabled && emailDomain && credential.services.email) {
+        const domainSuffixes = emailDomain.split(/\s*,\s*/);
+        for (let i = 0; i < domainSuffixes.length; i++) {
+          const suffix = domainSuffixes[i];
+          const domain = credential.services.email.email.toLowerCase().split("@").pop();
+          if (suffix.startsWith("*.")) {
+            if (domain.endsWith(suffix.substr(1))) {
+              return true;
+            }
+          } else if (domain === suffix) {
             return true;
           }
-        } else if (domain === suffix) {
+        }
+      } else if (ldapEnabled && credential.services.ldap) {
+        return true;
+      } else if (samlEnabled && credential.services.saml) {
+        return true;
+      } else if (googleEnabled && googleDomain && credential.services.google && credential.services.google.hd) {
+        if (credential.services.google.hd.toLowerCase() === googleDomain) {
           return true;
         }
       }
-    } else if (ldapEnabled && credential.services.ldap) {
-      return true;
-    } else if (samlEnabled && credential.services.saml) {
-      return true;
-    } else if (googleEnabled && googleDomain && credential.services.google && credential.services.google.hd) {
-      if (credential.services.google.hd.toLowerCase() === googleDomain) {
-        return true;
+
+      return false;
+    },
+
+    isUserInOrganization(user) {
+      for (let i = 0; i < user.loginCredentials.length; i++) {
+        let credential = Meteor.users.findOne({ _id: user.loginCredentials[i].id });
+        if (this.isCredentialInOrganization(credential)) {
+          return true;
+        }
       }
+
+      return false;
     }
-
-    return false;
   }
+}
 
-  isUserInOrganization(user) {
-    for (let i = 0; i < user.loginCredentials.length; i++) {
-      let credential = Meteor.users.findOne({ _id: user.loginCredentials[i].id });
-      if (this.isCredentialInOrganization(credential)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
+function SandstormDb(quotaManager) {
+  // Thin wrapper around makeSandstormDb, which allows it to be used with new.
+  Object.assign(this, makeSandstormDb(quotaManager));
 }
 
 // TODO(cleanup): These methods should not be defined freestanding and should use collection
