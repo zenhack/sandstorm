@@ -1088,7 +1088,6 @@ function makeSandstormDb(quotaManager) {
   //     grains: A number (can be Infinity)
 
   return {
-    quotaManager,
     collections: {
       // Direct access to underlying collections. DEPRECATED, but better than accessing the top-level
       // collection globals directly.
@@ -2140,13 +2139,13 @@ _.extend(SandstormDb.prototype, {
 
   updateUserQuota(user) {
     if (this.quotaManager) {
-      return this.quotaManager.updateUserQuota(this, user);
+      return quotaManager.updateUserQuota(this, user);
     }
   },
 
   getUserQuota(user) {
     if (this.isQuotaLdapEnabled()) {
-      return this.quotaManager.updateUserQuota(this, user);
+      return quotaManager.updateUserQuota(this, user);
     } else if (user.expires) {
       // HACK: Hard-coded demo user quota now that free plan doesn't allow creating grains...
       return { storage: 200000000, grains: 5, compute: 72000000000 }
