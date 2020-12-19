@@ -166,9 +166,9 @@ interface Assignable(T) {
     get @0 () -> (value :T);
 
     subscribe @1 (setter :Setter) -> (handle :Handle);
-    # Subscribe to updates. Calls the given setter any time the assignable's value changes.  Drop
-    # the returned handle to stop receiving updates. If `setter` is persistent, `handle` will also
-    # be persistent.
+    # Subscribe to updates. Calls the given setter once immediately and then any time the
+    # assignable's value changes.  Drop the returned handle to stop receiving updates. If
+    # `setter` is persistent, `handle` will also be persistent.
   }
 
   interface Setter {
