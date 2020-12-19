@@ -7,11 +7,9 @@
 
 namespace sandstorm {
 CspManager::CspManager(
-  Assignable<GatewayRouter::ContentSecurityPolicy::Policy>::Getter::Client policyGetter,
   GatewayRouter::ContentSecurityPolicy::Reporter::Client reporter,
   bool allowLegacyRelaxed)
-  : policyGetter(policyGetter),
-    reporter(reporter),
+  : reporter(reporter),
     allowLegacyRelaxed(allowLegacyRelaxed),
     policy(makeDefaultPolicy()),
     reportKey(makeReportKey())

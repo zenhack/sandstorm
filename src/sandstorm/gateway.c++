@@ -116,6 +116,13 @@ static void removeExpired(std::map<Key, Value>& m, kj::TimePoint now, kj::Durati
   }
 }
 
+template <typename LeftKey, typename RightKey, typename Value>
+static void removeExpired(MultiKeyMap<LeftKey, RightKey, Value>& m, kj::TimePoint now, kj::Duration period) {
+  m.eraseAll([now, period](auto& lk, auto& rk, auto& v) {
+    return now - v.lastUsed >= period;
+  });
+}
+
 kj::Promise<void> GatewayService::cleanupLoop() {
   static constexpr auto PURGE_PERIOD = 2 * kj::MINUTES;
 
@@ -247,21 +254,20 @@ kj::Promise<void> GatewayService::request(
         if(parsedUrl.path.size() != 1) {
           return notFound();
         }
-        auto iter = cspManagers.find(parsedUrl.path[0]);
-        if(iter == cspManagers.end()) {
+        KJ_IF_MAYBE(entry, uiHosts.findRight(CspReportKey { parsedUrl.path[0] })) {
+          auto req = entry->cspManager->getReporter().reportViolationRequest();
+          auto report = req.initReport();
+          capnp::JsonCodec json;
+          json.handleByAnnotation<GatewayRouter::ContentSecurityPolicy::ViolationReport>();
+          json.decode(text, report);
+          return req.send().then([this,&response](auto) -> kj::Promise<void> {
+            kj::HttpHeaders respHeaders(tables.headerTable);
+            response.send(204, "No Content", respHeaders, uint64_t(0));
+            return kj::READY_NOW;
+          });
+        } else {
           return notFound();
         }
-        auto& mgr = iter->second;
-        auto req = mgr.getReporter().reportViolationRequest();
-        auto report = req.initReport();
-        capnp::JsonCodec json;
-        json.handleByAnnotation<GatewayRouter::ContentSecurityPolicy::ViolationReport>();
-        json.decode(text, report);
-        return req.send().then([this,&response](auto) -> kj::Promise<void> {
-          kj::HttpHeaders respHeaders(tables.headerTable);
-          response.send(204, "No Content", respHeaders, uint64_t(0));
-          return kj::READY_NOW;
-        });
       });
     } else if (hostId->startsWith("api-")) {
       KJ_IF_MAYBE(token, getAuthToken(headers, url, true)) {
@@ -473,8 +479,10 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
     headers.set(tables.hCookie, kj::strArray(forwardedCookies, "; "));
   }
 
-  auto iter = uiHosts.find(sessionId);
-  if (iter == uiHosts.end()) {
+  KJ_IF_MAYBE(existingEntry, uiHosts.findLeft(SessionIdKey { sessionId })) {
+    existingEntry->lastUsed = timer.now();
+    return kj::addRef(*existingEntry->bridge);
+  } else {
     capnp::MallocMessageBuilder requestMessage(128);
     auto params = requestMessage.getRoot<WebSession::Params>();
 
@@ -496,9 +504,16 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
     options.allowCookies = true;
     options.isHttps = baseUrl.scheme == "https";
 
-    kj::StringPtr key = sessionId;
+    kj::StringPtr sessionIdKey = sessionId;
 
     auto loadingPaf = kj::newPromiseAndFulfiller<Handle::Client>();
+    auto reporterPaf = kj::newPromiseAndFulfiller<GatewayRouter::ContentSecurityPolicy::Reporter::Client>();
+    auto cspSubscriptionPaf = kj::newPromiseAndFulfiller<Handle::Client>();
+
+    auto cspMgr = kj::refcounted<CspManager>(
+        GatewayRouter::ContentSecurityPolicy::Reporter::Client(kj::mv(reporterPaf.promise)),
+        allowLegacyRelaxedCSP
+    );
 
     // Use a CapRedirector to re-establish the session on disconenct.
     //
@@ -507,12 +522,20 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
     //   efficiently.
     capnp::Capability::Client sessionRedirector = kj::heap<CapRedirector>(
         [this,router = this->router,KJ_MVCAP(ownParams),KJ_MVCAP(sessionId),KJ_MVCAP(basePath),
-         loadingFulfiller = kj::mv(loadingPaf.fulfiller)]() mutable
+         loadingFulfiller = kj::mv(loadingPaf.fulfiller),
+         cspMgr = kj::addRef(cspMgr),
+         reporterFulfiller = kj::mv(reporterPaf.fulfiller),
+         cspSubscriptionFulfiller = kj::mv(cspSubscriptionPaf.fulfiller)]() mutable
         -> capnp::Capability::Client {
       auto req = router.openUiSessionRequest();
       req.setSessionCookie(sessionId);
       req.setParams(ownParams);
       auto sent = req.send();
+      auto csp = sent.getCsp();
+      reporterFulfiller->fulfill(csp.getReporter());
+      auto subscribeReq = csp.getCurrentPolicy().subscribeRequest();
+      subscribeReq.setSetter(kj::mv(*cspMgr));
+      cspSubscriptionFulfiller->fulfill(subscribeReq.send().getHandle());
       if (loadingFulfiller->isWaiting()) {
         loadingFulfiller->fulfill(sent.getLoadingIndicator());
       }
@@ -520,37 +543,42 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
       return sent.then([this,&sessionId,&basePath]
                        (capnp::Response<GatewayRouter::OpenUiSessionResults>&& response)
                        -> capnp::Capability::Client {
-        auto iter = uiHosts.find(sessionId);
-        KJ_ASSERT(iter != uiHosts.end());
-        iter->second.bridge->restrictParentFrame(response.getParentOrigin(), basePath);
-        return response.getSession();
+        KJ_IF_MAYBE(entry, uiHosts.findLeft(SessionIdKey { sessionId })) {
+          entry->bridge->restrictParentFrame(response.getParentOrigin(), basePath);
+          return response.getSession();
+        } else {
+          KJ_FAIL_ASSERT("Session ID not found", sessionId);
+        }
       }, [this,&sessionId](kj::Exception&& e) -> capnp::Capability::Client {
         // On error, invalidate the cached session immediately.
         // Catch: We can't actually do uiHosts.erase(sessionId) here because it might delete the
         //   current promise, leading to a crash. Add it to tasks instead.
         tasks.add(kj::evalLater([this, sessionId = kj::str(sessionId)]() {
-          uiHosts.erase(sessionId);
+          uiHosts.eraseLeft(SessionIdKey { sessionId });
         }));
         kj::throwFatalException(kj::mv(e));
       });
     });
 
+    auto bridge = kj::refcounted<WebSessionBridge>(
+        timer, sessionRedirector.castAs<WebSession>(),
+        Handle::Client(kj::mv(loadingPaf.promise)),
+        tables.bridgeTables, options,
+        kj::str(host), kj::str(baseUrl.host),
+        allowLegacyRelaxedCSP);
     UiHostEntry entry {
       timer.now(),
-      kj::refcounted<WebSessionBridge>(timer, sessionRedirector.castAs<WebSession>(),
-                                       Handle::Client(kj::mv(loadingPaf.promise)),
-                                       tables.bridgeTables, options,
-                                       kj::str(host), kj::str(baseUrl.host),
-                                       allowLegacyRelaxedCSP)
+      kj::addRef(*bridge),
+      kj::addRef(*cspMgr),
+      Handle::Client(kj::mv(cspSubscriptionPaf.promise)),
     };
-    auto insertResult = uiHosts.insert(std::make_pair(key, kj::mv(entry)));
-    KJ_ASSERT(insertResult.second);
-    iter = insertResult.first;
-  } else {
-    iter->second.lastUsed = timer.now();
+    uiHosts.insert(
+      SessionIdKey { sessionIdKey },
+      CspReportKey { cspMgr->getReportKey() },
+      kj::mv(entry)
+    );
+    return kj::mv(bridge);
   }
-
-  return kj::addRef(*iter->second.bridge);
 }
 
 kj::Maybe<kj::String> GatewayService::getAuthToken(

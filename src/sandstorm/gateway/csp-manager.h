@@ -5,12 +5,13 @@
 
 namespace sandstorm {
 
-class CspManager final: public Assignable<GatewayRouter::ContentSecurityPolicy::Policy>::Setter::Server {
+class CspManager final
+    : public kj::Refcounted,
+      public Assignable<GatewayRouter::ContentSecurityPolicy::Policy>::Setter::Server {
   public:
     KJ_DISALLOW_COPY(CspManager);
 
     CspManager(
-      Assignable<GatewayRouter::ContentSecurityPolicy::Policy>::Getter::Client policyGetter,
       GatewayRouter::ContentSecurityPolicy::Reporter::Client reporter,
       bool allowLegacyRelaxed
     );
@@ -25,7 +26,6 @@ class CspManager final: public Assignable<GatewayRouter::ContentSecurityPolicy::
     kj::Promise<void> set(SetContext context) override;
 
   private:
-    Assignable<GatewayRouter::ContentSecurityPolicy::Policy>::Getter::Client policyGetter;
     GatewayRouter::ContentSecurityPolicy::Reporter::Client reporter;
     bool allowLegacyRelaxed;
     kj::Own<GatewayRouter::ContentSecurityPolicy::Policy::Reader> policy;

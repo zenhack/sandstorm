@@ -24,6 +24,7 @@
 #include <kj/compat/tls.h>
 #include "web-session-bridge.h"
 #include "gateway/csp-manager.h"
+#include "util/multikeymap.h"
 
 namespace sandstorm {
 
@@ -102,10 +103,16 @@ private:
   struct UiHostEntry {
     kj::TimePoint lastUsed;
     kj::Own<WebSessionBridge> bridge;
+    kj::Own<CspManager> cspManager;
+    Handle::Client cspPolicySubscription;
   };
 
-  std::map<kj::StringPtr, UiHostEntry> uiHosts;
-  std::map<kj::StringPtr, CspManager> cspManagers;
+  // Key types for the uiHosts map. These are both just wrappers around
+  // StringPtr, to make it hard to mix them up.
+  struct SessionIdKey { kj::StringPtr sessionId; };
+  struct CspReportKey { kj::StringPtr cspKey; };
+
+  MultiKeyMap<SessionIdKey, CspReportKey, UiHostEntry> uiHosts;
 
   struct ApiHostEntry {
     kj::TimePoint lastUsed;
