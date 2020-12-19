@@ -18,6 +18,8 @@
 
 $import "/capnp/c++.capnp".namespace("sandstorm");
 
+using Json = import "/capnp/compat/json.capnp";
+
 using Util = import "util.capnp";
 using Package = import "package.capnp";
 using Supervisor = import "supervisor.capnp".Supervisor;
@@ -119,7 +121,8 @@ interface GatewayRouter {
   # it does not know how to handle directly.
 
   openUiSession @0 (sessionCookie :Text, params :WebSession.Params)
-                -> (session :WebSession, loadingIndicator :Util.Handle, parentOrigin :Text);
+                -> (session :WebSession, loadingIndicator :Util.Handle, parentOrigin :Text,
+                    csp :ContentSecurityPolicy);
   # Given a sandstorm-sid cookie value for a UI session, find the WebSession to handle requests.
   #
   # The gateway may cache the session capability, associated with this cookie value, for as long
@@ -133,6 +136,84 @@ interface GatewayRouter {
   #
   # `parentOrigin` is the origin permitted to frame this UI session. E.g. Content-Security-Policy
   # frame-ancestors should be used to block clickjacking.
+  #
+  # `csp` should be used to determine the Content-Security-Policy for this session, and
+  # to report violations.
+
+  struct ContentSecurityPolicy {
+    # A content security policy for a ui session.
+
+    currentPolicy @0 :Util.Assignable(Policy).Getter;
+    # Getter for the policy itself. The gateway should subscribe to this to receive
+    # updates.
+
+    reporter @1 :Reporter;
+    # Use this to report violations of the policy.
+
+    struct Policy {
+      # The policy to impose on this session.
+      #
+      # If the config option ALLOW_LEGACY_RELAXED_CSP is set to true, then
+      # this is ignored entirely and a lax policy is used.
+      #
+      # Otherwise, the default policy blocks loading of all third-party
+      # resources.
+
+      allowMedia @0 :Bool;
+      # If true, allow loading images & media from third party origins.
+    }
+
+    interface Reporter {
+      reportViolation @0 (report :ViolationReport);
+    }
+
+    struct ViolationReport {
+      # Content of a CSP violation report, as described in:
+      #
+      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only#Violation_report_syntax
+      #
+      # We only include the fields here that we currently actually use.
+      cspReport :group $Json.name("csp-report") {
+        disposition @0 :Disposition;
+        violatedDirective @1 :Text $Json.name("violated-directive");
+      }
+      enum Disposition {
+        enforce @0;
+        report @1;
+      }
+    }
+  }
+
+  interface CspHandler {
+    # A `CspHandler` is used to manage Content-Security-Policy for a ui session. Sandstorm
+    # takes the following approach to apps loading third-party images and media:
+    #
+    # - By default, block these using CSP
+    # - Set the CSP report-uri and report-to fields to a distinct value for each
+    #   session.
+    # - If a CSP violation report for media is received, display a popup in the Sandstorm
+    #   UI telling the user that media has been blocked for privacy reasons, and give them
+    #   the option to allow access.
+    # - If the user opts to allow access, change the CSP policy and refresh the page.
+    #
+    # The `CspHandler` is used by the gateway to inform the shell of such reports.
+
+
+    struct SessionPolicy {
+      # Specification of a Content Security Policy to use for a given session.
+
+      allowMedia @0 :Bool;
+      # Should media (images/video) be allowed?
+    }
+
+    reportViolation @0 (usedPolicy :SessionPolicy);
+    # Report that a CSP violation was received. The argument is the policy that
+    # had been set.
+
+    sessionPolicy @1 (getter :Util.Assignable(SessionPolicy).Getter);
+    # Get the current session policy for this session. The gateway should subscribe
+    # to this to get notifications of policy changes.
+  }
 
   openApiSession @1 (apiToken :Text, params :ApiSession.Params) -> (session :ApiSession);
   # Given a token from an `Authorization` header, find the ApiSession to handle requests.

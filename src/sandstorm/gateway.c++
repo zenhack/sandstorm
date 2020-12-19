@@ -23,6 +23,7 @@
 #include "smtp-proxy.h"
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <capnp/compat/json.h>
 
 namespace sandstorm {
 
@@ -72,6 +73,7 @@ static kj::String stripPort(kj::StringPtr hostport) {
 
 GatewayService::Tables::Tables(kj::HttpHeaderTable::Builder& headerTableBuilder)
     : headerTable(headerTableBuilder.getFutureTable()),
+      hAllow(headerTableBuilder.add("Allow")),
       hAccessControlAllowOrigin(headerTableBuilder.add("Access-Control-Allow-Origin")),
       hAccessControlExposeHeaders(headerTableBuilder.add("Access-Control-Expose-Headers")),
       hAcceptLanguage(headerTableBuilder.add("Accept-Language")),
@@ -228,6 +230,39 @@ kj::Promise<void> GatewayService::request(
       } else {
         return sendError(403, "Forbidden", response, MISSING_AUTHORIZATION_MESSAGE);
       }
+    } else if (*hostId == "csp-report") {
+      if(method != kj::HttpMethod::POST) {
+        kj::HttpHeaders respHeaders(tables.headerTable);
+        respHeaders.set(tables.hAllow, "POST");
+        response.send(405, "Method Not Allowed", respHeaders, uint64_t(0));
+        return kj::READY_NOW;
+      }
+      return requestBody.readAllText(2048).then([this,url,&response](kj::String text) {
+        auto parsedUrl = kj::Url::parse(url, kj::Url::HTTP_REQUEST);
+        auto notFound = [&]() -> kj::Promise<void> {
+          kj::HttpHeaders respHeaders(tables.headerTable);
+          response.send(404, "Not Found", respHeaders, uint64_t(0));
+          return kj::READY_NOW;
+        };
+        if(parsedUrl.path.size() != 1) {
+          return notFound();
+        }
+        auto iter = cspManagers.find(parsedUrl.path[0]);
+        if(iter == cspManagers.end()) {
+          return notFound();
+        }
+        auto& mgr = iter->second;
+        auto req = mgr.getReporter().reportViolationRequest();
+        auto report = req.initReport();
+        capnp::JsonCodec json;
+        json.handleByAnnotation<GatewayRouter::ContentSecurityPolicy::ViolationReport>();
+        json.decode(text, report);
+        return req.send().then([this,&response](auto) -> kj::Promise<void> {
+          kj::HttpHeaders respHeaders(tables.headerTable);
+          response.send(204, "No Content", respHeaders, uint64_t(0));
+          return kj::READY_NOW;
+        });
+      });
     } else if (hostId->startsWith("api-")) {
       KJ_IF_MAYBE(token, getAuthToken(headers, url, true)) {
         // API session.

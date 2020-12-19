@@ -23,6 +23,7 @@
 #include <map>
 #include <kj/compat/tls.h>
 #include "web-session-bridge.h"
+#include "gateway/csp-manager.h"
 
 namespace sandstorm {
 
@@ -55,6 +56,7 @@ public:
 
     const kj::HttpHeaderTable& headerTable;
 
+    kj::HttpHeaderId hAllow;
     kj::HttpHeaderId hAccessControlAllowOrigin;
     kj::HttpHeaderId hAccessControlExposeHeaders;
     kj::HttpHeaderId hAcceptLanguage;
@@ -103,6 +105,7 @@ private:
   };
 
   std::map<kj::StringPtr, UiHostEntry> uiHosts;
+  std::map<kj::StringPtr, CspManager> cspManagers;
 
   struct ApiHostEntry {
     kj::TimePoint lastUsed;

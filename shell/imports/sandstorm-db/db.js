@@ -343,6 +343,8 @@ const Sessions = new Mongo.Collection("sessions", collectionOptions);
 //       and may even go away asynchronously (if they were restored). This field should not be used
 //       to enforce security; its purpose is only to assist in showing a helpful error message in
 //       the case that the user's access has been blocked by other means.
+//   cspPolicy: a JSON-encoded GatewayRouter.ContentSecurityPolicy.Policy describing what the
+//       Content-Security-Policy should be for this session.
 
 const SignupKeys = new Mongo.Collection("signupKeys", collectionOptions);
 // Invite keys which may be used by users to get access to Sandstorm.
