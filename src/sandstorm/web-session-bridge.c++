@@ -1285,7 +1285,7 @@ kj::Promise<void> WebSessionBridge::handleResponse(
             auto cspReportUri = kj::str(
                 "http", secure, "://csp-report.", *hostStr,
                 "/", (*cspMgr)->getReportKey());
-            auto cspReport = kj::str(
+            cspReport = kj::str(
                 // There are two ways to specify a csp reporting URL.
                 // report-uri is deprecated, and report-to is not widely
                 // implemented yet... so we specify both.
@@ -1302,8 +1302,8 @@ kj::Promise<void> WebSessionBridge::handleResponse(
                 "media-src * " UNSAFE;
           } else {
               mediaPolicy =
-                "img-src 'self'" UNSAFE
-                "media-src 'self'" UNSAFE;
+                "img-src 'self' " UNSAFE
+                "media-src 'self' " UNSAFE;
           }
           headers.set(
               tables.hContentSecurityPolicy,
