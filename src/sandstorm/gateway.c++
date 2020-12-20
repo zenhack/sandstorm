@@ -567,7 +567,7 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
         Handle::Client(kj::mv(loadingPaf.promise)),
         tables.bridgeTables, options,
         kj::str(host), kj::str(baseUrl.host),
-        allowLegacyRelaxedCSP);
+        kj::addRef(*cspMgr));
     uiHosts.insert(UiHostEntry {
       .sessionId = sessionIdKey,
       .cspReportKey = cspMgr->getReportKey(),

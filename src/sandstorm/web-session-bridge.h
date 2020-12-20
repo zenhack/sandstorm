@@ -19,6 +19,7 @@
 
 #include <kj/compat/http.h>
 #include <sandstorm/web-session.capnp.h>
+#include <sandstorm/gateway/csp-manager.h>
 #include "util.h"
 
 namespace sandstorm {
@@ -87,7 +88,7 @@ public:
                    const Tables& tables, Options options,
                    kj::Maybe<kj::String>&& host = nullptr,
                    kj::Maybe<kj::String>&& baseHost = nullptr,
-                   bool allowLegacyRelaxedCSP = false);
+                   kj::Maybe<kj::Own<CspManager>>&& = nullptr);
 
   void restrictParentFrame(kj::StringPtr parent, kj::StringPtr self);
   // Return headers that prevents any origin except the designated one from framing us.
@@ -121,7 +122,7 @@ private:
   const Tables& tables;
   Options options;
   kj::Maybe<kj::String> host, baseHost;
-  bool allowLegacyRelaxedCSP;
+  kj::Maybe<kj::Own<CspManager>> cspManager;
 
   struct FrameRestriction {
     kj::String parent;
