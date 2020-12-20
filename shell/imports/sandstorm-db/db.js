@@ -1268,6 +1268,14 @@ class SandstormDb {
 
     return false;
   }
+
+  getSessionCsp(sessionId) {
+    const result = this.collections.sessions.findOne({_id: sessions}, {cspPolicy: 1});
+    if(result) {
+      return result.cspPolicy;
+    }
+    return null;
+  }
 }
 
 // TODO(cleanup): These methods should not be defined freestanding and should use collection

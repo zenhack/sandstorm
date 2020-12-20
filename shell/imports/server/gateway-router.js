@@ -282,6 +282,31 @@ function getUiViewAndUserInfo(grainId, vertex, accountId, identityId, sessionId,
   return { uiView, userInfo };
 }
 
+function makeCspGetter(db, sessionId) {
+  return {
+    get() {
+      let result = db.getSessionCsp(sessionId);
+      if(!result) {
+        result = { allowMedia: false }
+      }
+      return { value: result }
+    },
+
+    subscribe(setter) {
+      setter.set(this.get().value);
+      return { handle: {} }
+    }
+  }
+}
+
+function makeCspReporter(db, sessionId) {
+  return {
+    reportViolation(report) {
+      console.log("Received csp violation report for session ", sessionId, ": ", report)
+    }
+  }
+}
+
 class GatewayRouterImpl {
   openUiSession(sessionId, params) {
     const observer = new PermissionsObserver();
@@ -380,7 +405,11 @@ class GatewayRouterImpl {
             hasLoaded = true;
           }
         },
-        parentOrigin: session.parentOrigin || process.env.ROOT_URL
+        parentOrigin: session.parentOrigin || process.env.ROOT_URL,
+        csp: {
+          currentPolicy: makeCspGetter(globalDb, sessionId),
+          reporter: makeCspReporter(globalDb, sessionId),
+        },
       };
     }).catch(err => {
       observer.invalidate();
