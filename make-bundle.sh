@@ -150,8 +150,9 @@ ln -s ../sandstorm bundle/bin/spk
 chmod u+w bundle/bin/*
 
 # Copy over capnp schemas.
-mkdir -p bundle/usr/include/{capnp,sandstorm}
+mkdir -p bundle/usr/include/{capnp/compat,sandstorm}
 cp src/capnp/!(*test*).capnp bundle/usr/include/capnp
+cp src/capnp/compat/!(*test*).capnp bundle/usr/include/capnp/compat
 cp src/sandstorm/!(*-internal).capnp bundle/usr/include/sandstorm
 
 # Copy over node_modules.
