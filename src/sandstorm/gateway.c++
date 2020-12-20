@@ -116,11 +116,13 @@ static void removeExpired(std::map<Key, Value>& m, kj::TimePoint now, kj::Durati
   }
 }
 
-template <typename LeftKey, typename RightKey, typename Value>
-static void removeExpired(MultiKeyMap<LeftKey, RightKey, Value>& m, kj::TimePoint now, kj::Duration period) {
-  m.eraseAll([now, period](auto& lk, auto& rk, auto& v) {
-    return now - v.lastUsed >= period;
-  });
+template <typename Row, typename... Indexes>
+static void removeExpired(kj::Table<Row, Indexes...>& m, kj::TimePoint now, kj::Duration period) {
+  for(auto& row : m) {
+    if(now - row.lastUsed >= period) {
+      m.erase(row);
+    }
+  }
 }
 
 kj::Promise<void> GatewayService::cleanupLoop() {
@@ -254,7 +256,7 @@ kj::Promise<void> GatewayService::request(
         if(parsedUrl.path.size() != 1) {
           return notFound();
         }
-        KJ_IF_MAYBE(entry, uiHosts.findRight(CspReportKey { parsedUrl.path[0] })) {
+        KJ_IF_MAYBE(entry, uiHosts.find<kj::HashIndex<CspReportKey>>(parsedUrl.path[0])) {
           auto req = entry->cspManager->getReporter().reportViolationRequest();
           auto report = req.initReport();
           capnp::JsonCodec json;
@@ -479,7 +481,7 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
     headers.set(tables.hCookie, kj::strArray(forwardedCookies, "; "));
   }
 
-  KJ_IF_MAYBE(existingEntry, uiHosts.findLeft(SessionIdKey { sessionId })) {
+  KJ_IF_MAYBE(existingEntry, uiHosts.find<kj::HashIndex<SessionIdKey>>(sessionId)) {
     existingEntry->lastUsed = timer.now();
     return kj::addRef(*existingEntry->bridge);
   } else {
@@ -523,7 +525,7 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
     capnp::Capability::Client sessionRedirector = kj::heap<CapRedirector>(
         [this,router = this->router,KJ_MVCAP(ownParams),KJ_MVCAP(sessionId),KJ_MVCAP(basePath),
          loadingFulfiller = kj::mv(loadingPaf.fulfiller),
-         cspMgr = kj::addRef(cspMgr),
+         cspMgr = kj::addRef(*cspMgr),
          reporterFulfiller = kj::mv(reporterPaf.fulfiller),
          cspSubscriptionFulfiller = kj::mv(cspSubscriptionPaf.fulfiller)]() mutable
         -> capnp::Capability::Client {
@@ -543,7 +545,7 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
       return sent.then([this,&sessionId,&basePath]
                        (capnp::Response<GatewayRouter::OpenUiSessionResults>&& response)
                        -> capnp::Capability::Client {
-        KJ_IF_MAYBE(entry, uiHosts.findLeft(SessionIdKey { sessionId })) {
+        KJ_IF_MAYBE(entry, uiHosts.find<kj::HashIndex<SessionIdKey>>(sessionId)) {
           entry->bridge->restrictParentFrame(response.getParentOrigin(), basePath);
           return response.getSession();
         } else {
@@ -554,7 +556,7 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
         // Catch: We can't actually do uiHosts.erase(sessionId) here because it might delete the
         //   current promise, leading to a crash. Add it to tasks instead.
         tasks.add(kj::evalLater([this, sessionId = kj::str(sessionId)]() {
-          uiHosts.eraseLeft(SessionIdKey { sessionId });
+          uiHosts.eraseMatch<kj::HashIndex<SessionIdKey>>(sessionId);
         }));
         kj::throwFatalException(kj::mv(e));
       });
@@ -566,17 +568,14 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
         tables.bridgeTables, options,
         kj::str(host), kj::str(baseUrl.host),
         allowLegacyRelaxedCSP);
-    UiHostEntry entry {
-      timer.now(),
-      kj::addRef(*bridge),
-      kj::addRef(*cspMgr),
-      Handle::Client(kj::mv(cspSubscriptionPaf.promise)),
-    };
-    uiHosts.insert(
-      SessionIdKey { sessionIdKey },
-      CspReportKey { cspMgr->getReportKey() },
-      kj::mv(entry)
-    );
+    uiHosts.insert(UiHostEntry {
+      .sessionId = sessionIdKey,
+      .cspReportKey = cspMgr->getReportKey(),
+      .lastUsed = timer.now(),
+      .bridge = kj::addRef(*bridge),
+      .cspManager = kj::addRef(*cspMgr),
+      .cspPolicySubscription = Handle::Client(kj::mv(cspSubscriptionPaf.promise)),
+    });
     return kj::mv(bridge);
   }
 }

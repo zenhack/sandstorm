@@ -21,10 +21,10 @@
 #include <sandstorm/backend.capnp.h>
 #include <kj/compat/url.h>
 #include <map>
+#include <kj/table.h>
 #include <kj/compat/tls.h>
 #include "web-session-bridge.h"
 #include "gateway/csp-manager.h"
-#include "util/multikeymap.h"
 
 namespace sandstorm {
 
@@ -101,18 +101,40 @@ private:
   kj::Maybe<kj::StringPtr> termsPublicId;
 
   struct UiHostEntry {
+    kj::StringPtr sessionId;
+    kj::StringPtr cspReportKey;
     kj::TimePoint lastUsed;
     kj::Own<WebSessionBridge> bridge;
     kj::Own<CspManager> cspManager;
     Handle::Client cspPolicySubscription;
   };
 
-  // Key types for the uiHosts map. These are both just wrappers around
-  // StringPtr, to make it hard to mix them up.
-  struct SessionIdKey { kj::StringPtr sessionId; };
-  struct CspReportKey { kj::StringPtr cspKey; };
+// We want to be able to look up `UiHostEntry`s by both cspReportKey and the sessionId.
+// Here's the boilerplate for that:
+#define DEFINE_INDEX(ClassName, fieldName) \
+  class ClassName final { \
+    public: \
+      inline kj::StringPtr& keyForRow(UiHostEntry& row) const { \
+        return row.fieldName; \
+      } \
+      inline const kj::StringPtr& keyForRow(const UiHostEntry& row) const { \
+        return row.fieldName; \
+      } \
+      inline bool matches(UiHostEntry& row, kj::StringPtr key) const { \
+        return row.fieldName == key; \
+      } \
+      inline bool matches(const UiHostEntry& row, kj::StringPtr key) const { \
+        return row.fieldName == key; \
+      } \
+      inline uint hashCode(kj::StringPtr key) const { \
+        return kj::hashCode(key); \
+      } \
+  }
+  DEFINE_INDEX(SessionIdKey, sessionId);
+  DEFINE_INDEX(CspReportKey, cspReportKey);
+#undef DEFINE_INDEX
 
-  MultiKeyMap<SessionIdKey, CspReportKey, UiHostEntry> uiHosts;
+  kj::Table<UiHostEntry, kj::HashIndex<SessionIdKey>, kj::HashIndex<CspReportKey>> uiHosts;
 
   struct ApiHostEntry {
     kj::TimePoint lastUsed;
