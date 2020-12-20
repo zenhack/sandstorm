@@ -536,7 +536,7 @@ kj::Maybe<kj::Own<kj::HttpService>> GatewayService::getUiBridge(kj::HttpHeaders&
       auto csp = sent.getCsp();
       reporterFulfiller->fulfill(csp.getReporter());
       auto subscribeReq = csp.getCurrentPolicy().subscribeRequest();
-      subscribeReq.setSetter(kj::mv(*cspMgr));
+      subscribeReq.setSetter(kj::addRef(*cspMgr));
       cspSubscriptionFulfiller->fulfill(subscribeReq.send().getHandle());
       if (loadingFulfiller->isWaiting()) {
         loadingFulfiller->fulfill(sent.getLoadingIndicator());
