@@ -302,7 +302,13 @@ function makeCspGetter(db, sessionId) {
 function makeCspReporter(db, sessionId) {
   return {
     reportViolation(report) {
-      console.log("Received csp violation report for session ", sessionId, ": ", report)
+      const { cspReport } = report;
+      if(cspReport.disposition === "enforce"
+          && (cspReport.violatedDirective === "img-src" ||
+              cspReport.violatedDirective === "media-src")) {
+
+        db.setCspReport(sessionId);
+      }
     }
   }
 }
@@ -890,6 +896,12 @@ Meteor.publish("sessions", function (sessionId, options) {
   });
 
   return query;
+});
+
+Meteor.publish("cspReport", function(sessionId) {
+  check(sessionId, Hex256);
+
+  return this.connection.sandstormDb.getCspReport(sessionId);
 });
 
 Meteor.methods({

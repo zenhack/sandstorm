@@ -714,7 +714,14 @@ Template.grainView.helpers({
 
   packageId() {
     return globalDb.getGrain(this.grainId).packageId;
-  }
+  },
+
+  hasCspReport() {
+    return true;
+    // This current thorws an exception, and I(zenhack) am not
+    // sure what's wrong.
+    //return Template.instance()._cspReport.find({cspReport: true}).count() !== 0;
+  },
 });
 
 Template.grainView.events({
@@ -726,6 +733,22 @@ Template.grainView.events({
     this.grainView.doNotRevealIdentity();
   },
 });
+
+Template.grainAllowMediaPopup.onCreated(function() {
+  Meteor.subscribe("cspReport", this.data.sessionId);
+  Template.instance()._cspReport = new Mongo.Collection("cspReport");
+});
+
+Template.grainAllowMediaPopup.helpers({
+  hasBlockedMedia() {
+    const data = Template.currentData();
+    console.log("template data:", data);
+    return globalDb.collections.sessions.find({
+      _id: Template.data.sessionId,
+      cspReport: true,
+    }).count() !== 0;
+  },
+})
 
 Template.grain.helpers({
   currentGrain: function () {

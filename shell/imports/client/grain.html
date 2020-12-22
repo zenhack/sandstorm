@@ -37,6 +37,7 @@
         <pre>{{error}}</pre>
       {{/if}}
     {{else if appOrigin}}
+      {{> grainAllowMediaPopup sessionId=sessionId }}
       {{!-- Selenium requires iframes to have an id in order to select them. `id` is only
             used for testing purposes. --}}
       <iframe data-grainid="{{grainId}}" id="{{idPrefix}}grain-frame-{{grainId}}" class="grain-frame" src="{{appOrigin}}/_sandstorm-init?sessionid={{sessionId}}&path={{originalPath}}"></iframe>
@@ -59,6 +60,15 @@
     {{/if}}
     </div>
   {{/with}}
+</template>
+
+<template name="grainAllowMediaPopup">
+  {{#if hasBlockedMedia}}
+  <p>
+    Some media used by this app have been blocked for your privacy.
+    <button class="allow-media-button">Allow</button>
+  </p>
+  {{/if}}
 </template>
 
 <template name="grainInMyTrash">

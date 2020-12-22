@@ -345,6 +345,12 @@ const Sessions = new Mongo.Collection("sessions", collectionOptions);
 //       the case that the user's access has been blocked by other means.
 //   cspPolicy: a JSON-encoded GatewayRouter.ContentSecurityPolicy.Policy describing what the
 //       Content-Security-Policy should be for this session.
+//   cspReport: If this is present and true, it indicates that the grain associated with this
+//       session has tried to load an external images or media object, which has been blocked
+//       by our Content-Security-Policy. The UI treats this as an indication that it should
+//       prompt the user as to whether these resources should be loaded. If they say yes,
+//       we clear this, update cspPolicy, above, and refresh the page, which will then
+//       use a relaxed csp which will allow the request.
 
 const SignupKeys = new Mongo.Collection("signupKeys", collectionOptions);
 // Invite keys which may be used by users to get access to Sandstorm.
@@ -1270,11 +1276,30 @@ class SandstormDb {
   }
 
   getSessionCsp(sessionId) {
-    const result = this.collections.sessions.findOne({_id: sessions}, {cspPolicy: 1});
+    const result = this.collections.sessions.findOne({_id: sessionId}, {cspPolicy: 1});
     if(result) {
       return result.cspPolicy;
     }
     return null;
+  }
+
+  allowCspMedia(sessionId, shouldAllow) {
+    this.collections.sessions.update(
+      {_id: sessionId},
+      {$set: { cspReport: false, cspPolicy: { allowMedia: shouldAllow } } }
+    );
+  }
+
+  setCspReport(sessionId) {
+    this.collections.sessions.update(
+      {_id: sessionId},
+      {$set: { cspReport: true }},
+    );
+  }
+
+  getCspReport(sessionId) {
+    const session = this.collections.sessions.findOne({_id: sessionId}, {cspReport: 1})
+    return (!!session) && session.cspReport;
   }
 }
 
