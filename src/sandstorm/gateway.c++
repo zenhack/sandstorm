@@ -118,11 +118,9 @@ static void removeExpired(std::map<Key, Value>& m, kj::TimePoint now, kj::Durati
 
 template <typename Row, typename... Indexes>
 static void removeExpired(kj::Table<Row, Indexes...>& m, kj::TimePoint now, kj::Duration period) {
-  for(auto& row : m) {
-    if(now - row.lastUsed >= period) {
-      m.erase(row);
-    }
-  }
+  m.eraseAll([now, period](Row& row) {
+    return now - row.lastUsed >= period;
+  });
 }
 
 kj::Promise<void> GatewayService::cleanupLoop() {
