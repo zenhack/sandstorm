@@ -7,9 +7,19 @@
 </body>
 
 <template name="hello">
+  <!-- We display the things that sandstorm-http-bridge passes
+    us via headers, so we can check that their values are
+    correct.
+  -->
   <p id="id">id: {{id}}</p>
   <p id="name">name: {{name}}</p>
   <p id="picture">picture: {{picture}}</p>
   <p id="preferredHandle">preferredHandle: {{preferredHandle}}</p>
   <p id="pronouns">pronouns: {{pronouns}}</p>
+
+  <!-- Link to an eternally hosted image. This is to test
+    our Content-Security-Policy logic, by seeing whether or
+    not it loads, and if it triggers a CSP report.
+  -->
+  <img src="https://sandstorm.io/images/sandcat.svg" />
 </template>
