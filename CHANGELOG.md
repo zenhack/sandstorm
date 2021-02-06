@@ -1,3 +1,11 @@
+### v0.279 (2021-01-23)
+- Extended `startSharing` `postMessage` API to allow a path (within the grain) to be appended to the sharing URL, so that users of the URL land on that path. (Thanks @troyjfarrell.)
+- Improved error behavior when given an invalid API token. (Thanks @zenhack.)
+- Meteor updated to 2.0, a major release.
+
+### v0.278 (2020-12-26)
+- Fix broken setup wizard.
+
 ### v0.277 (2020-12-19)
 - Added OpenID Connect login provider. (Thanks @rs22.)
 - Fixed an re-landed static publishing change from 0.275 that had been reverted in 0.276. (Thanks @zenhack.)
