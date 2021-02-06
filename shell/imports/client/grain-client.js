@@ -754,18 +754,13 @@ Template.grainView.events({
 });
 
 Template.grainAllowMediaPopup.onCreated(function() {
-  Meteor.subscribe("cspReport", this.data.sessionId);
-  Template.instance()._cspReport = new Mongo.Collection("cspReport");
+  Meteor.subscribe("sessions", this.data.sessionId, { grainId: this.data.grainId });
 });
 
 Template.grainAllowMediaPopup.helpers({
   hasBlockedMedia() {
     const data = Template.currentData();
-    console.log("template data:", data);
-    return globalDb.collections.sessions.find({
-      _id: Template.data.sessionId,
-      cspReport: true,
-    }).count() !== 0;
+    return globalDb.getCspReport(data.sessionId);
   },
 })
 

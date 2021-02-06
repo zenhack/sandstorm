@@ -961,12 +961,6 @@ Meteor.publish("sessions", function (sessionId, options) {
   return query;
 });
 
-Meteor.publish("cspReport", function(sessionId) {
-  check(sessionId, Hex256);
-
-  return this.connection.sandstormDb.getCspReport(sessionId);
-});
-
 Meteor.methods({
   redeemSharingToken(token) {
     check(token, String);

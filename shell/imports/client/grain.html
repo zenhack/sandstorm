@@ -37,7 +37,7 @@
         <pre>{{error}}</pre>
       {{/if}}
     {{else if appOrigin}}
-      {{> grainAllowMediaPopup sessionId=sessionId }}
+      {{> grainAllowMediaPopup sessionId=sessionId grainId=grainId}}
       {{!-- Selenium requires iframes to have an id in order to select them. `id` is only
             used for testing purposes. --}}
       <iframe data-grainid="{{grainId}}" id="{{idPrefix}}grain-frame-{{grainId}}" class="grain-frame" src="{{appOrigin}}/_sandstorm-init?sessionid={{sessionId}}&path={{originalPath}}"></iframe>
