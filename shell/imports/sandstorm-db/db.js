@@ -1288,9 +1288,18 @@ class SandstormDb {
     return null;
   }
 
-  allowCspMedia(sessionId, shouldAllow) {
+  allowCspMedia(userId, sessionId, shouldAllow) {
+    // Update the CSP media policy for `sessionId`, which must be belong to
+    // `userId` (if it does not, this will no-op). `shouldAllow` is a boolean
+    // indicating whether images & media should be allowed for this session
+    // via CSP.
+    //
+    // Strictly speaking the `userId` is redundant information, but while it's
+    // not quite as good as not separating designation from authority in the
+    // first place, passing in the expected user id makes much it harder for
+    // callers to have confused deputy vulnerabilities.
     this.collections.sessions.update(
-      {_id: sessionId},
+      {_id: sessionId, userId},
       {$set: { cspReport: false, cspPolicy: { allowMedia: shouldAllow } } }
     );
   }

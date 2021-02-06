@@ -764,6 +764,15 @@ Template.grainAllowMediaPopup.helpers({
   },
 })
 
+Template.grainAllowMediaPopup.events({
+  'click .allow-media-button'() {
+    const data = Template.currentData();
+    Meteor.call('allowCspMedia', data.sessionId, true, function() {
+      console.log('TODO(now): refresh the iframe.')
+    });
+  },
+})
+
 Template.grain.helpers({
   currentGrain: function () {
     return globalGrains.getActive();

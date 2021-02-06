@@ -1003,7 +1003,14 @@ Meteor.methods({
     }
 
     return { grainId: grain._id };
-  }
+  },
+
+  allowCspMedia(sessionId, shouldAllow) {
+    check(sessionId, String);
+    check(shouldAllow, Boolean);
+
+    globalDb.allowCspMedia(this.userId, sessionId, shouldAllow);
+  },
 });
 
 // =======================================================================================
