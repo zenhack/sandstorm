@@ -288,21 +288,27 @@ Template.grainRestartButton.events({
       if (err) {
         alert("Restart failed: " + err); // TODO(someday): make this better UI
       } else {
-        const frames = document.getElementsByClassName("grain-frame");
-        for (let i = 0; i < frames.length; i++) {
-          const frame = frames[i];
-          if (frame.dataset.grainid == grainId) {
-            // Re-assign frame.src; this causes the browser to refresh the
-            // iframe's contents.
-            //
-            // eslint-disable-next-line no-self-assign
-            frame.src = frame.src;
-          }
-        }
+        refreshGrain(grainId);
       }
     });
   },
 });
+
+function refreshGrain(grainId) {
+  // Refresh the iframe for the given grainId.
+
+  const frames = document.getElementsByClassName("grain-frame");
+  for (let i = 0; i < frames.length; i++) {
+    const frame = frames[i];
+    if (frame.dataset.grainid == grainId) {
+      // Re-assign frame.src; this causes the browser to refresh the
+      // iframe's contents.
+      //
+      // eslint-disable-next-line no-self-assign
+      frame.src = frame.src;
+    }
+  }
+}
 
 function selectElementContents(element) {
   if (document.body.createTextRange) {
@@ -767,9 +773,15 @@ Template.grainAllowMediaPopup.helpers({
 Template.grainAllowMediaPopup.events({
   'click .allow-media-button'() {
     const data = Template.currentData();
-    Meteor.call('allowCspMedia', data.sessionId, true, function() {
-      console.log('TODO(now): refresh the iframe.')
+    Template.instance().csp = globalDb.getSessionCsp(data.sessionId);
+    Tracker.autorun(() => {
+      // Wait for the CSP to change, then refresh the page.
+      const csp = globalDb.getSessionCsp(data.sessionId);
+      if(csp && csp.allowMedia) {
+        refreshGrain(data.grainId);
+      }
     });
+    Meteor.call('allowCspMedia', data.sessionId, true);
   },
 })
 
