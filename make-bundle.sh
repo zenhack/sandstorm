@@ -131,7 +131,7 @@ fi
 # Extract bin/mongo and bin/mongod from the old sandstorm bundle, and place them in bundle/.
 tar xf $OLD_BUNDLE_PATH --transform=s/^${OLD_BUNDLE_BASE}/bundle/ $OLD_MONGO_FILES
 
-cp $(which zip unzip xz gpg) bundle/bin
+cp $(which mksquashfs zip unzip xz gpg) bundle/bin
 
 # 'node-fibers' depends on a package (detect-libc) that uses various heuristics
 # to work out what libc implementation & version it was linked against. The more

@@ -846,7 +846,7 @@ void SupervisorMain::setResourceLimits() {
 }
 
 void SupervisorMain::checkPaths() {
-  // Create or verify the pkg, var, and tmp directories.
+  // Create or verify the pkg, var, and tmp directories, and the squashfs
 
   // Let us be explicit about permissions for now.
   umask(0);
@@ -857,6 +857,14 @@ void SupervisorMain::checkPaths() {
 
   // Check that package exists.
   KJ_SYSCALL(access(pkgPath.cStr(), R_OK | X_OK), pkgPath);
+
+  auto squashfsPath = kj::str(pkgPath, ".squashfs");
+  KJ_SYSCALL_HANDLE_ERRORS(access(squashfsPath.cStr(), R_OK | X_OK)) {
+    case ENOENT:
+      Subprocess({"mksquashfs", pkgPath.cStr(), squashfsPath.cStr()}).waitForSuccess();
+    default:
+      KJ_FAIL_SYSCALL("access()", error);
+  }
 
   // Create / verify existence of the var directory.  Do this as the target user.
   if (isNew) {
@@ -995,8 +1003,12 @@ void SupervisorMain::setupFilesystem() {
   KJ_SYSCALL(umount2("/tmp/sandstorm-grain", MNT_DETACH));
 
   // Bind the app package to "sandbox", which will be the grain's root directory.
-  bind(pkgPath, "/tmp/sandstorm-grain", MS_NODEV | MS_RDONLY);
-
+  {
+    auto squashfsPath = kj::str(pkgPath, ".squashfs");
+    KJ_SYSCALL(mount(squashfsPath.cStr(), "/tmp/sandstorm-grain", "squashfs",
+                     MS_NODEV | MS_NOSUID | MS_RDONLY,
+                     nullptr));
+  }
   // Change to that directory.
   KJ_SYSCALL(chdir("/tmp/sandstorm-grain"));
 
